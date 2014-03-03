@@ -1,0 +1,20 @@
+---
+- name: Install packages
+  yum: name={{ item }} state=present
+  with_items:
+    - gcc
+    - git
+  tags: [ 'rancid' , 'yum' ]
+
+- name: Create rancid user account
+  user: name=rancid
+        comment="rancid"
+        uid=557
+        shell=/bin/bash
+  tags: [ 'rancid' ]
+
+- name: Get git-rancid source code
+  git:  repo=git://github.com/dotwaffle/rancid-git
+        dest=/home/rancid/rancid-git
+        version={{ rancid_version }}
+  tags: [ 'rancid' ]
