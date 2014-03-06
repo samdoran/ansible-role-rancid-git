@@ -3,18 +3,24 @@
   yum: name={{ item }} state=present
   with_items:
     - expect
-    - perl-cgi
+    - perl-CGI
+    - perl-LockFile-Simple
+    - perl-MailTools
   tags: [ 'rancid' , 'yum' ]
 
-- name: Create rancid user account
-  user: name=rancid
-        comment="rancid"
-        uid=557
-        shell=/bin/bash
-  tags: [ 'rancid' ]
+- name: Copy rancid-git rpm
+  copy: src=rancid-git-{{ rancid_version }}.el6.x86_64.rpm
+        dest=/tmp/
+        owner=root
+        group=root
+        mode=0644
+  tags: rancid
 
-- name: Get git-rancid source code
-  git:  repo=git://github.com/dotwaffle/rancid-git
-        dest=/home/rancid/rancid-git
-        version={{ rancid_version }}
-  tags: [ 'rancid' ]
+- name: Install rancid-git
+  command: rpm -Uvh /tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm
+  tags: rancid
+
+- name: Remove rancid-git rpm
+  file: dest=/tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm
+        state=absent
+  tags: rancid
