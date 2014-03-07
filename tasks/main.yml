@@ -8,19 +8,26 @@
     - perl-MailTools
   tags: [ 'rancid' , 'yum' ]
 
+- name: Check if ranci-git is already installed
+  command: rpm -q rancid-git
+  register: rancid-git_status
+
 - name: Copy rancid-git rpm
   copy: src=rancid-git-{{ rancid_version }}.el6.x86_64.rpm
         dest=/tmp/
         owner=root
         group=root
         mode=0644
+  when: rancid-git_status.rc != 0
   tags: rancid
 
 - name: Install rancid-git
   command: rpm -Uvh /tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm
+  when: rancid-git_status.rc != 0
   tags: rancid
 
 - name: Remove rancid-git rpm
-  file: dest=/tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm
+  file: path=/tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm
         state=absent
+  when: rancid-git_status.rc != 0
   tags: rancid
