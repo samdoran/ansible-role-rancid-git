@@ -8,9 +8,11 @@
     - perl-MailTools
   tags: [ 'rancid' , 'yum' ]
 
-- name: Check if ranci-git is already installed
+- name: Check if rancid-git is already installed
   command: rpm -q rancid-git
   register: rancid-git_status
+  ignore_errors: true
+  tags: rancid
 
 - name: Copy rancid-git rpm
   copy: src=rancid-git-{{ rancid_version }}.el6.x86_64.rpm
