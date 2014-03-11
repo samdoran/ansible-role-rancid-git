@@ -1,0 +1,45 @@
+---
+- name: Add rancid to git group
+  user: name=rancid
+        append=yes
+        groups=git
+  tags: rancid
+
+- name: Change permissions on /var/rancid
+  file: path=/var/rancid
+        owner=root
+        group=rancid
+        mode=0770
+  tags: rancid
+
+- name: Copy rancid.conf
+  template: src=rancid.conf.j2
+            dest=/etc/rancid/rancid.conf
+            owner=root
+            group=rancid
+            mode=0640
+  tags: rancid
+
+- name: Copy lg.conf
+  template: src=lg.conf.j2
+            dest=/etc/rancid/lg.conf
+            owner=root
+            group=rancid
+            mode=0640
+  tags: rancid
+
+- name: Copy clogin
+  template: src=cloginrc.j2
+            dest=/var/rancid/.cloginrc
+            owner=root
+            group=rancid
+            mode=0640
+  tags: rancid
+
+- name: Copy gitconfig
+  copy: src=gitconfig
+        dest=/var/rancid/.gitconfig
+        owner=rancid
+        group=rancid
+        mode=0640
+  tags: rancid
