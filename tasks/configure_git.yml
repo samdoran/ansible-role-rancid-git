@@ -1,0 +1,15 @@
+---
+- name: Copy gitconfig
+  copy: src=gitconfig
+        dest={{ rancid_base_dir }}/.gitconfig
+        owner=rancid
+        group=rancid
+        mode=0640
+  tags: rancid
+
+- name: Add git remotes
+  command:  git remote add {{ item.name }}
+            chdir={{ rancid_base_dir }}
+  sudo_user: rancid
+  with_items: git_remote
+  tags: rancid
