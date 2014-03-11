@@ -1,8 +1,12 @@
 ---
+- include: configure_rancid.yml
+- include: install_rancid.yml
+
 - name: Install deps for rancid-git
   yum: name={{ item }} state=present
   with_items:
     - expect
+    - git
     - perl-CGI
     - perl-LockFile-Simple
     - perl-MailTools
@@ -10,7 +14,7 @@
 
 - name: Check if rancid-git is already installed
   command: rpm -q rancid-git
-  register: rancid-git_status
+  register: rancidgit_status
   ignore_errors: true
   tags: rancid
 
@@ -20,16 +24,28 @@
         owner=root
         group=root
         mode=0644
-  when: rancid-git_status.rc != 0
+  when: rancidgit_status.rc != 0
   tags: rancid
 
 - name: Install rancid-git
   command: rpm -Uvh /tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm
-  when: rancid-git_status.rc != 0
+  when: rancidgit_status.rc != 0
   tags: rancid
 
 - name: Remove rancid-git rpm
   file: path=/tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm
         state=absent
-  when: rancid-git_status.rc != 0
+  when: rancidgit_status.rc != 0
+  tags: rancid
+
+- name: Copy hosts file
+  copy: src=hosts dest=/etc/hosts owner=root group=root mode=0644
+  tags: rancid
+
+- name: Copy postfix aliases
+  template: src=aliases.j2
+            dest=/etc/aliases
+            owner=root
+            group=root
+            mode=0644
   tags: rancid
