@@ -7,9 +7,17 @@
         mode=0640
   tags: rancid
 
+- name: Check for git remotes
+  command: git remote
+            chdir={{ rancid_base_dir }}
+  sudo_user: rancid
+  register: git_remote_status
+  tags: rancid
+
 - name: Add git remotes
-  command:  git remote add {{ item.name }}
+  command:  git remote add {{ item.name }} {{ item.url }}
             chdir={{ rancid_base_dir }}
   sudo_user: rancid
   with_items: git_remote
+  when: git_remote_status.stdout == ""
   tags: rancid
