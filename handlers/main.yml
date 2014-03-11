@@ -1,0 +1,4 @@
+---
+- name: run rancid-cvs
+  command: /usr/libexec/rancid/rancid-cvs
+  sudo_user: rancid
