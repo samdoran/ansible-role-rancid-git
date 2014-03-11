@@ -1,4 +1,14 @@
 ---
+- name: Install deps for rancid-git
+  yum: name={{ item }} state=present
+  with_items:
+    - expect
+    - git
+    - perl-CGI
+    - perl-LockFile-Simple
+    - perl-MailTools
+  tags: [ 'rancid' , 'yum' ]
+
 - name: Check if rancid-git is already installed
   command: rpm -q rancid-git
   register: rancidgit_status
