@@ -1,6 +1,6 @@
 ---
 - name: Copy hosts file
-  copy: src=hosts dest=/etc/hosts owner=root group=root mode=0644
+  template: src=hosts.j2 dest=/etc/hosts owner=root group=root mode=0644
   tags: rancid
 
 - name: Add rancid to git group
@@ -29,12 +29,6 @@
             mode=0640
   tags: rancid
 
-- name: Run rancid-cvs
-  command: /usr/libexec/rancid/rancid-cvs
-  sudo_user: rancid
-  when: current_list_of_groups.stdout != "{{ rancid_list_of_groups }}"
-  tags: rancid
-
 - name: Copy lg.conf
   template: src=lg.conf.j2
             dest=/etc/rancid/lg.conf
@@ -59,20 +53,16 @@
             mode=0644
   tags: rancid
 
-- name: Copy gitconfig
-  copy: src=gitconfig
-        dest=/var/rancid/.gitconfig
-        owner=rancid
-        group=rancid
-        mode=0640
+- name: Run rancid-cvs
+  command: /usr/libexec/rancid/rancid-cvs
+  sudo_user: rancid
+  when: current_list_of_groups.stdout != "{{ rancid_list_of_groups }}"
   tags: rancid
 
-# - name: Add git remotes
-#   command:
-#   with_items
-#   tags: rancid
-
-# - name: Configure routers.db
-
-#   with_items:
-#   tags: rancid
+- name: Configure router.db for groups
+  lineinfile: dest=/var/rancid/{{ item.group }}/router.db
+              regexp='^{{ item.name }}'
+              line='{{ item.name }}:{{ item.type }}:{{ item.state }}'
+  sudo_user: rancid
+  with_items: network_device
+  tags: rancid
