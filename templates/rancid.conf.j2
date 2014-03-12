@@ -22,7 +22,7 @@ umask 027
 TMPDIR=/tmp; export TMPDIR
 # Be careful changing this, it affects CVSROOT below.  It should be a FQPN, not
 # relative.
-BASEDIR={{ rancid_base_dir }}; export BASEDIR
+BASEDIR={{ rancid_repo_dir }}; export BASEDIR
 PATH=/usr/libexec/rancid:/usr/bin:/usr/sbin:/bin:/usr/local/bin:/usr/bin; export PATH
 # Location of the CVS/SVN repository.  Be careful changing this.
 # If RCSSYS is svn, this can be:
@@ -34,7 +34,7 @@ PATH=/usr/libexec/rancid:/usr/bin:/usr/sbin:/bin:/usr/local/bin:/usr/bin; export
 #     commands can run, e.g. by running rancid-cvs after installation.
 CVSROOT=$BASEDIR/CVS; export CVSROOT
 # Location of log files produced by rancid-run(1).
-LOGDIR=$BASEDIR/logs; export LOGDIR
+LOGDIR={{ rancid_home }}/logs; export LOGDIR
 #
 # Select which RCS system to use, "cvs" (default), "svn", "git" or
 # "git-remote".  Do not change this after CVSROOT has been created with
