@@ -8,7 +8,7 @@
   tags: rancid
 
 - name: Check for git remotes
-  command: git remote
+  command:  git remote
             chdir={{ rancid_repo_dir }}
   sudo_user: rancid
   register: git_remote_status
