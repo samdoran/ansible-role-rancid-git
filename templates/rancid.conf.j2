@@ -22,7 +22,7 @@ umask 027
 TMPDIR=/tmp; export TMPDIR
 # Be careful changing this, it affects CVSROOT below.  It should be a FQPN, not
 # relative.
-BASEDIR={{ rancid_repo_dir }}; export BASEDIR
+BASEDIR={{ rancid_home }}; export BASEDIR
 PATH=/usr/libexec/rancid:/usr/bin:/usr/sbin:/bin:/usr/local/bin:/usr/bin; export PATH
 # Location of the CVS/SVN repository.  Be careful changing this.
 # If RCSSYS is svn, this can be:
@@ -87,10 +87,10 @@ LIST_OF_GROUPS="{{ rancid_list_of_groups }}"; export LIST_OF_GROUPS
 # domain not the same as the local one, define that domain here.  "@" must be
 # included, as this is simply appended to the usual recipients.  It is NOT
 # appended to recipients specified in rancid-run's -m option.
-MAILDOMAIN="@royall.dev"; export MAILDOMAIN
+#MAILDOMAIN="@example.com"; export MAILDOMAIN
 #
 # If you want to have colorised html mails with the diffs set this to YES
-HTMLMAILS=YES; export HTMLMAILS
+HTMLMAILS=NO; export HTMLMAILS
 #
 # By default, rancid mail is marked with precedence "bulk".  This may be
 # changed by setting the MAILHEADERS variable; for example no header by setting
