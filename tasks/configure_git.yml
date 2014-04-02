@@ -21,7 +21,8 @@
   tags: rancid
 
 - name: Push to git remotes
-  command: git push -u {{ item.nam }} master
+  command: git push -u {{ item.name }} master chdir={{ rancid_home }}
+  sudo_user: rancid
   with_items: git_remote
   when: git_remote_status.stdout == ""
   tags: rancid
