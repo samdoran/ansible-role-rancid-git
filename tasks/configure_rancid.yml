@@ -10,16 +10,19 @@
   tags: rancid
 
 - name: Change permissions on {{ rancid_home }}
-  file: path={{ rancid_home }}
-        owner=root
-        group=rancid
-        mode=0770
+  file: path={{ rancid_home }} owner=root group=rancid mode=0770
   tags: rancid
 
-- name: Setup SSH key for rancid user
-  user: name=rancid
-        generate_ssh_key=yes
-        ssh_key_bits=2048
+- name: Create .ssh folder for rancid user
+  file: path={{ rancid_home }}/.ssh state=directory owner=rancid group=rancid mode=700
+  tags: rancid
+
+- name: Install SSH public key for rancid user
+  template: src=rancid_id_rsa.pub.j2 dest={{ rancid_home }}/.ssh/id_rsa.pub owner=rancid group=rancid mode=640
+  tags: rancid
+
+- name: Install SSH private key for rancid user
+  template: src=rancid_id_rsa.j2 dest={{ rancid_home }}/.ssh/id_rsa owner=rancid group=rancid mode=400
   tags: rancid
 
 - name: Set password for rancid user
