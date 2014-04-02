@@ -9,14 +9,14 @@
 
 - name: Check for git remotes
   command:  git remote
-            chdir={{ rancid_repo_dir }}
+            chdir={{ rancid_home }}
   sudo_user: rancid
   register: git_remote_status
   tags: rancid
 
 - name: Add git remotes
   command:  git remote add {{ item.name }} {{ item.url }}
-            chdir={{ rancid_repo_dir }}
+            chdir={{ rancid_home }}
   sudo_user: rancid
   with_items: git_remote
   when: git_remote_status.stdout == ""

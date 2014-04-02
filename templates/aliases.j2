@@ -96,7 +96,6 @@ decode:     root
 alec@pyron.com, \root
 
 # rancid notification groups
-alec@pyron.com
-alec@pyron.com
-alec@pyron.com
-alec@pyron.com
+{% for item in rancid_notify_groups %}
+rancid-{{ item.group }}:     {{ item.notify }}
+{% endfor %}
