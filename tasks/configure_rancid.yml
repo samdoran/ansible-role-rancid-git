@@ -16,6 +16,17 @@
         mode=0770
   tags: rancid
 
+- name: Setup SSH key for rancid user
+  user: name=rancid
+        generate_ssh_key=yes
+        ssh_key_bits=2048
+  tags: rancid
+
+- name: Set password for rancid user
+  user: name=rancid
+        password={{ rancid_password_hash }}
+  tags: rancid
+
 - name: Check if LIST_OF_GROUPS has changed
   shell: egrep '^LIST_OF_GROUPS' /etc/rancid/rancid.conf | awk -F \" '{print $2}'
   register: current_list_of_groups
@@ -53,6 +64,10 @@
             mode=0644
   tags: rancid
 
+- name: Rehash aliases
+  command: newaliases
+  tags: rancid
+
 - name: Run rancid-cvs
   command: /usr/libexec/rancid/rancid-cvs
   sudo_user: rancid
@@ -60,7 +75,7 @@
   tags: rancid
 
 - name: Configure router.db for groups
-  lineinfile: dest={{ rancid_repo_dir }}/{{ item.group }}/router.db
+  lineinfile: dest={{ rancid_home }}/{{ item.group }}/router.db
               regexp='^{{ item.name }}'
               line='{{ item.name }}:{{ item.type }}:{{ item.state }}'
   sudo_user: rancid
