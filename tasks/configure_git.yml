@@ -13,6 +13,12 @@
   register: git_remote_status
   tags: rancid
 
+- name: Add SSH key of git remotes to known_hosts
+  shell: /usr/bin/ssh-keyscan {{ item.hostname }} >> ~rancid/.ssh/known_hosts
+  with_items: git_remote
+  when: git_remote_status.stdout == ""
+  tags: rancid
+
 - name: Add git remotes
   command:  git remote add {{ item.name }} {{ item.url }} chdir={{ rancid_home }}
   sudo_user: rancid
