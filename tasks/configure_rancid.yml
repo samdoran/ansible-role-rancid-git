@@ -84,3 +84,20 @@
   sudo_user: rancid
   with_items: network_device
   tags: rancid
+
+- name: Install rancid-run crontab
+  cron: name="run config differ hourly"
+        state=present
+        user=rancid
+        minute="0-59/4"
+        job="/usr/bin/rancid-run > /dev/null"
+  tags: test
+
+- name: Install crontab to clean up old rancid logs
+  cron: name="clean out config differ logs"
+        state=present
+        user=rancid
+        minute="50"
+        hour="23"
+        job="find {{ rancid_home }}/logs -type f -mtime +2 -exec rm {} \; > /dev/null"
+  tags: test
