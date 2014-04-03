@@ -51,7 +51,7 @@
             mode=0640
   tags: rancid
 
-- name: Copy clogin
+- name: Copy cloginrc
   template: src=cloginrc.j2
             dest={{ rancid_home }}/.cloginrc
             owner=root
@@ -59,17 +59,41 @@
             mode=0640
   tags: rancid
 
+- name: Configure postfix mydomain
+  lineinfile: dest=/etc/postfix/main.cf
+              state=present
+              regexp='^#?mydomain = '
+              line='mydomain = {{ postfix_mydomain }}'
+  tags: [ "rancid" , "rancidpostfix" ]
+
+- name: Configure postfix myorigin
+  lineinfile: dest=/etc/postfix/main.cf
+              state=present
+              regexp='^#?myorigin = '
+              line='myorigin = \$mydomain'
+  tags: [ "rancid" , "rancidpostfix" ]
+
+- name: Configure postfix mydestination
+  lineinfile: dest=/etc/postfix/main.cf
+              state=present
+              backrefs=yes
+              regexp='^(mydestination = .*localhost)$'
+              line='\1, \$mydomain'
+  tags: [ "rancid" , "rancidpostfix" ]
+
 - name: Copy postfix aliases
   template: src=aliases.j2
             dest=/etc/aliases
             owner=root
             group=root
             mode=0644
-  tags: rancid
+  register: aliases_status
+  tags: [ "rancid" , "rancidpostfix" ]
 
 - name: Rehash aliases
   command: newaliases
-  tags: rancid
+  when: aliases_status.changed == true
+  tags: [ "rancid" , "rancidpostfix" ]
 
 - name: Run rancid-cvs
   command: /usr/libexec/rancid/rancid-cvs
@@ -89,9 +113,9 @@
   cron: name="run config differ hourly"
         state=present
         user=rancid
-        minute="0-59/4"
+        minute="1"
         job="/usr/bin/rancid-run > /dev/null"
-  tags: test
+  tags: [ "rancid" , "rancidcron" ]
 
 - name: Install crontab to clean up old rancid logs
   cron: name="clean out config differ logs"
@@ -100,4 +124,4 @@
         minute="50"
         hour="23"
         job="find {{ rancid_home }}/logs -type f -mtime +2 -exec rm {} \; > /dev/null"
-  tags: test
+  tags: [ "rancid" , "rancidcron" ]
