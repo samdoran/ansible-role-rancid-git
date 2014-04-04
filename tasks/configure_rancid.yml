@@ -59,28 +59,6 @@
             mode=0640
   tags: [ "rancid" , "cloginrc" ]
 
-- name: Configure postfix mydomain
-  lineinfile: dest=/etc/postfix/main.cf
-              state=present
-              regexp='^#?mydomain = '
-              line='mydomain = {{ postfix_mydomain }}'
-  tags: [ "rancid" , "rancidpostfix" ]
-
-- name: Configure postfix myorigin
-  lineinfile: dest=/etc/postfix/main.cf
-              state=present
-              regexp='^#?myorigin = '
-              line='myorigin = \$mydomain'
-  tags: [ "rancid" , "rancidpostfix" ]
-
-- name: Configure postfix mydestination
-  lineinfile: dest=/etc/postfix/main.cf
-              state=present
-              backrefs=yes
-              regexp='^(mydestination = .*localhost)$'
-              line='\1, \$mydomain'
-  tags: [ "rancid" , "rancidpostfix" ]
-
 - name: Copy postfix aliases
   template: src=aliases.j2
             dest=/etc/aliases
