@@ -107,7 +107,7 @@
               line='{{ item.name }}:{{ item.type }}:{{ item.state }}'
   sudo_user: rancid
   with_items: network_device
-  tags: rancid
+  tags: [ "rancid" , "routerdb" ]
 
 - name: Install rancid-run crontab
   cron: name="run config differ hourly"
