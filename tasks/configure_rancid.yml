@@ -1,7 +1,7 @@
 ---
 - name: Copy hosts file
   template: src=hosts.j2 dest=/etc/hosts owner=root group=root mode=0644
-  tags: rancid
+  tags: [ "rancid" , "devices" ]
 
 - name: Add rancid to git group
   user: name=rancid
@@ -57,7 +57,7 @@
             owner=root
             group=rancid
             mode=0640
-  tags: [ "rancid" , "cloginrc" ]
+  tags: [ "rancid" , "cloginrc" , "devices" ]
 
 - name: Copy postfix aliases
   template: src=aliases.j2
@@ -85,7 +85,7 @@
               line='{{ item.name }}:{{ item.type }}:{{ item.state }}'
   sudo_user: rancid
   with_items: network_device
-  tags: [ "rancid" , "routerdb" ]
+  tags: [ "rancid" , "routerdb" , "devices" ]
 
 - name: Install rancid-run crontab
   cron: name="run config differ hourly"
