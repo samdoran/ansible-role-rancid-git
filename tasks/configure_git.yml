@@ -15,6 +15,7 @@
 
 - name: Add SSH key of git remotes to known_hosts
   shell: /usr/bin/ssh-keyscan {{ item.hostname }} >> ~rancid/.ssh/known_hosts
+  sudo_user: rancid
   with_items: git_remote
   when: git_remote_status.stdout == ""
   tags: rancid
