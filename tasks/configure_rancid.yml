@@ -114,7 +114,7 @@
         state=present
         user=rancid
         minute="1"
-        job="/usr/bin/rancid-run > /dev/null"
+        job="/usr/bin/rancid-run"
   tags: [ "rancid" , "rancidcron" ]
 
 - name: Install crontab to clean up old rancid logs
@@ -123,5 +123,5 @@
         user=rancid
         minute="50"
         hour="23"
-        job="find {{ rancid_home }}/logs -type f -mtime +2 -exec rm {} \; > /dev/null"
+        job="find {{ rancid_home }}/logs -type f -mtime +2 -exec rm {} \;"
   tags: [ "rancid" , "rancidcron" ]
