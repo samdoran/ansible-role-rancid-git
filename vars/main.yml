@@ -1,5 +1,5 @@
 ---
-rancid_version: 2.3.8-4
+rancid_version: 2.3.9-0
 rancid_repo_dir: /var/rancid/git
 rancid_home: /var/rancid
 rancid_list_of_groups: firewalls n5ks routers switches
