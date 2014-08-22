@@ -25,7 +25,7 @@ rancid_notify_groups:
 
 # Create one entry for each network device
 # See rancid documentation for valid types
-network_devices:
+rancid_network_devices:
   - name: c2911
     type: cisco
     ip: 192.168.5.1

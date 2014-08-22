@@ -54,13 +54,13 @@
 - name: Run rancid-cvs
   command: /usr/libexec/rancid/rancid-cvs
   sudo_user: rancid
-  # when: current_list_of_groups.stdout != '{{ rancid_list_of_groups }}'
+  when: current_list_of_groups.stdout != '{{ rancid_list_of_groups }}'
   tags: rancid
 
 - name: Configure router.db for groups
   lineinfile: "dest={{ rancid_home }}/{{ item.group }}/router.db regexp='^{{ item.name }}' line='{{ item.name }}:{{ item.type }}:{{ item.state }}'"
   sudo_user: rancid
-  with_items: network_devices
+  with_items: rancid_network_devices
   tags: [ 'rancid' , 'routerdb' , 'devices' ]
 
 - name: Install rancid-run crontab
