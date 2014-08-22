@@ -4,6 +4,10 @@ rancid_version: 2.3.9-1
 rancid_repo_dir: /var/rancid/git
 rancid_home: /var/rancid
 
+# Name and email for rancid user in git commits
+rancid_git_name: rancid
+rancid_git_email: rancid@acme.com
+
 # Whether or not to install rancid
 # This gets changed via set_fact
 install_rancid: false
