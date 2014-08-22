@@ -18,7 +18,7 @@
   tags: rancid
 
 - name: Add SSH key of git remotes to known_hosts
-  lineinfile: "create=yes state=present backup=yes dest=~rancid/.ssh/known_hosts line='{{ item.stdout }}'"
+  lineinfile: "create=yes state=present dest=~rancid/.ssh/known_hosts line='{{ item.stdout }}'"
   sudo_user: rancid
   with_items: git_remote_host_key.results
   tags: rancid
