@@ -2,3 +2,6 @@
 - name: run rancid-cvs
   command: /usr/libexec/rancid/rancid-cvs
   sudo_user: rancid
+
+- name: rehash aliases
+  command: newaliases

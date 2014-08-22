@@ -48,11 +48,7 @@
 - name: Copy postfix aliases
   template: src=aliases.j2 dest=/etc/aliases owner=root group=root mode=0644
   register: aliases_status
-  tags: [ 'rancid' , 'rancidpostfix' ]
-
-- name: Rehash aliases
-  command: newaliases
-  when: aliases_status.changed == true
+  notify: rehash aliases
   tags: [ 'rancid' , 'rancidpostfix' ]
 
 - name: Run rancid-cvs
