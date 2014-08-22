@@ -1,35 +1,32 @@
 ---
 - name: Copy gitconfig
-  copy: src=gitconfig
-        dest={{ rancid_home }}/.gitconfig
-        owner=rancid
-        group=rancid
-        mode=0640
+  copy: src=gitconfig dest={{ rancid_home }}/.gitconfig owner=rancid group=rancid mode=0640
   tags: rancid
 
 - name: Check for git remotes
-  command:  git remote chdir={{ rancid_home }}
+  command: git remote chdir={{ rancid_home }}
   sudo_user: rancid
   register: git_remote_status
+  changed_when: false
   tags: rancid
 
 - name: Add SSH key of git remotes to known_hosts
   shell: /usr/bin/ssh-keyscan {{ item.hostname }} >> ~rancid/.ssh/known_hosts
   sudo_user: rancid
-  with_items: git_remote
+  with_items: rancid_git_remotes
   when: git_remote_status.stdout == ""
   tags: rancid
 
 - name: Add git remotes
   command:  git remote add {{ item.name }} {{ item.url }} chdir={{ rancid_home }}
   sudo_user: rancid
-  with_items: git_remote
+  with_items: rancid_git_remotes
   when: git_remote_status.stdout == ""
   tags: rancid
 
 - name: Push to git remotes
   command: git push -u {{ item.name }} master chdir={{ rancid_home }}
   sudo_user: rancid
-  with_items: git_remote
+  with_items: rancid_git_remotes
   when: git_remote_status.stdout == ""
   tags: rancid

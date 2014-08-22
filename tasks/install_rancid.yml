@@ -12,25 +12,21 @@
 - name: Check if rancid-git is already installed
   command: rpm -q rancid-git
   register: rancidgit_status
+  changed_when: false
   ignore_errors: true
   tags: [ "rancid" , "updaterancid" ]
 
 - name: Copy rancid-git rpm
-  copy: src=rancid-git-{{ rancid_version }}.el6.x86_64.rpm
-        dest=/tmp/
-        owner=root
-        group=root
-        mode=0644
-  when: rancidgit_status.stdout != "rancid-git-{{ rancid_version }}.el6.x86_64"
+  copy: src=rancid-git-{{ rancid_version }}.el6.x86_64.rpm dest=/tmp/ owner=root group=root mode=0644
+  when: "rancidgit_status.stdout != 'rancid-git-{{ rancid_version }}.el6.x86_64'"
   tags: [ "rancid" , "updaterancid" ]
 
 - name: Install rancid-git
   command: rpm -Uvh /tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm
-  when: rancidgit_status.stdout != "rancid-git-{{ rancid_version }}.el6.x86_64"
+  when: "rancidgit_status.stdout != 'rancid-git-{{ rancid_version }}.el6.x86_64'"
   tags: [ "rancid" , "updaterancid" ]
 
 - name: Remove rancid-git rpm
-  file: path=/tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm
-        state=absent
-  when: rancidgit_status.stdout != "rancid-git-{{ rancid_version }}.el6.x86_64"
+  file: path=/tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm state=absent
+  when: "rancidgit_status.stdout != 'rancid-git-{{ rancid_version }}.el6.x86_64'"
   tags: [ "rancid" , "updaterancid" ]

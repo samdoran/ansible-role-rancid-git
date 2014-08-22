@@ -1,12 +1,10 @@
 ---
 - name: Copy hosts file
   template: src=hosts.j2 dest=/etc/hosts owner=root group=root mode=0644
-  tags: [ "rancid" , "devices" ]
+  tags: [ 'rancid' , 'devices' ]
 
 - name: Add rancid to git group
-  user: name=rancid
-        append=yes
-        groups=git
+  user: name=rancid append=yes groups=git
   tags: rancid
 
 - name: Change permissions on {{ rancid_home }}
@@ -26,80 +24,53 @@
   tags: rancid
 
 - name: Set password for rancid user
-  user: name=rancid
-        password={{ rancid_password_hash }}
+  user: name=rancid password={{ rancid_password_hash }}
   tags: rancid
 
 - name: Check if LIST_OF_GROUPS has changed
-  shell: egrep '^LIST_OF_GROUPS' /etc/rancid/rancid.conf | awk -F \" '{print $2}'
+  shell: egrep '^LIST_OF_GROUPS' /etc/rancid/rancid.conf | awk -F \\\" '{print $2}'
   register: current_list_of_groups
+  changed_when: false
   tags: rancid
 
 - name: Copy rancid.conf
-  template: src=rancid.conf.j2
-            dest=/etc/rancid/rancid.conf
-            owner=root
-            group=rancid
-            mode=0640
-  tags: [ "rancid" , "rancidconf" ]
+  template: src=rancid.conf.j2 dest=/etc/rancid/rancid.conf owner=root group=rancid mode=0640
+  tags: [ 'rancid' , 'rancidconf' ]
 
 - name: Copy lg.conf
-  template: src=lg.conf.j2
-            dest=/etc/rancid/lg.conf
-            owner=root
-            group=rancid
-            mode=0640
-  tags: [ "rancid" , "rancidconf" ]
+  template: src=lg.conf.j2 dest=/etc/rancid/lg.conf owner=root group=rancid mode=0640
+  tags: [ 'rancid' , 'rancidconf' ]
 
 - name: Copy cloginrc
-  template: src=cloginrc.j2
-            dest={{ rancid_home }}/.cloginrc
-            owner=root
-            group=rancid
-            mode=0640
-  tags: [ "rancid" , "cloginrc" , "devices" ]
+  template: src=cloginrc.j2 dest={{ rancid_home }}/.cloginrc owner=root group=rancid mode=0640
+  tags: [ 'rancid' , 'cloginrc' , 'devices' ]
 
 - name: Copy postfix aliases
-  template: src=aliases.j2
-            dest=/etc/aliases
-            owner=root
-            group=root
-            mode=0644
+  template: src=aliases.j2 dest=/etc/aliases owner=root group=root mode=0644
   register: aliases_status
-  tags: [ "rancid" , "rancidpostfix" ]
+  tags: [ 'rancid' , 'rancidpostfix' ]
 
 - name: Rehash aliases
   command: newaliases
   when: aliases_status.changed == true
-  tags: [ "rancid" , "rancidpostfix" ]
+  tags: [ 'rancid' , 'rancidpostfix' ]
 
 - name: Run rancid-cvs
   command: /usr/libexec/rancid/rancid-cvs
   sudo_user: rancid
-  when: current_list_of_groups.stdout != "{{ rancid_list_of_groups }}"
+  # when: current_list_of_groups.stdout != '{{ rancid_list_of_groups }}'
   tags: rancid
 
 - name: Configure router.db for groups
-  lineinfile: dest={{ rancid_home }}/{{ item.group }}/router.db
-              regexp='^{{ item.name }}'
-              line='{{ item.name }}:{{ item.type }}:{{ item.state }}'
+  lineinfile: "dest={{ rancid_home }}/{{ item.group }}/router.db regexp='^{{ item.name }}' line='{{ item.name }}:{{ item.type }}:{{ item.state }}'"
   sudo_user: rancid
-  with_items: network_device
-  tags: [ "rancid" , "routerdb" , "devices" ]
+  with_items: network_devices
+  tags: [ 'rancid' , 'routerdb' , 'devices' ]
 
 - name: Install rancid-run crontab
-  cron: name="run config differ hourly"
-        state=present
-        user=rancid
-        minute="36"
-        job="/usr/bin/rancid-run"
-  tags: [ "rancid" , "rancidcron" ]
+  cron: "name='run config differ hourly' state=present user=rancid minute='36' job='/usr/bin/rancid-run'"
+  tags: [ 'rancid' , 'rancidcron' ]
 
 - name: Install crontab to clean up old rancid logs
-  cron: name="clean out config differ logs"
-        state=present
-        user=rancid
-        minute="50"
-        hour="23"
-        job="find {{ rancid_home }}/logs -type f -mtime +2 -exec rm {} \;"
-  tags: [ "rancid" , "rancidcron" ]
+  cron: "name='clean out config differ logs' state=present user=rancid minute='50' hour='23' job='find {{ rancid_home }}/logs -type f -mtime +2 -exec rm {} \\;'"
+  tags: [ 'rancid' , 'rancidcron' ]

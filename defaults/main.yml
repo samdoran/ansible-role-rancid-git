@@ -1,2 +1,5 @@
 ---
-# defaults file for foo
+rancid_version: 2.3.9-1
+rancid_repo_dir: /var/rancid/git
+rancid_home: /var/rancid
+rancid_list_of_groups: firewalls routers switches
