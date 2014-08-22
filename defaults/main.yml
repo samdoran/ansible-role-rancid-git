@@ -1,5 +1,74 @@
 ---
+# Some defaults
 rancid_version: 2.3.9-1
 rancid_repo_dir: /var/rancid/git
 rancid_home: /var/rancid
+
+# Whether or not to install rancid
+# This gets changed via set_fact
+install_rancid: false
+
+# Space delimited list of groups added to LIST_OF_GROUPS in /etc/rancid/rancid.conf
 rancid_list_of_groups: firewalls routers switches
+
+# For each group in LIST_OF_GROUPS, who gets emailed the diffs.
+# Added to /etc/aliases
+rancid_notify_groups:
+  - group: firewalls
+    notify: bob@acme.com
+
+  - group: routers
+    notify: bob@acme.com
+
+  - group: switches
+    notify: bob@acme.com
+
+# Create one entry for each network device
+# See rancid documentation for valid types
+network_devices:
+  - name: c2911
+    type: cisco
+    ip: 192.168.5.1
+    state: up
+    group: routers
+
+# Repositories where changes are pushed
+# An empty repository must exist and the rancid user must have SSH access
+# before running this role
+rancid_git_remotes:
+  - name: origin
+    hostname: git.acme.com
+    url:  git@git.acme.com:rancid/network-configs.git
+
+# SSH keys for rancid user
+# Recommend storing these in an Ansible vault
+rancid_ssh_private_key: |
+  -----BEGIN RSA PRIVATE KEY-----
+  MIIEowIBAAKCAQEA0ABJ3RvkvwWGRmqP/YnuVfh0yUIXnb3UhrQe72sSOjFlWvIj
+  6ibrJQcf36AMrUCGQfC3MhboMlQHdNZhpJP+u2RWx+eephHvFX0E1XgkopCIlluw
+  32bk9eoKLy12j6FNvd/kEPh+uHXf5/Cicb3kQLHrKFuVBbkUMKsHpUA7P0ChqAOC
+  M4Tuv8pVBeT3bXmuHqPwvy+S9RFarhxmppmekiS5bDc1KQHgZXmTPamTFmumNm3H
+  ojh7I2M9Fxm7I6z6g/RFmkbeO2t1qCcD5h6LyupJAb1VFBnFTLpB+hxrQ3E+Alk/
+  Aa1/Fr8WHICKclrcTN+OhJKW+/6ANfLyyonbjQIDAQABAoIBAGEhgVyrhepeHhIL
+  +Smgm5ex6neBUZ3r467zte5/xYc/QeFyaasSeYRVC2FWUBUnqIpqamINqGi4LLM2
+  2WoNYksH1C6NztwmS8txEizNae4wKFhugO4SEqFzpUXaqR7xaGhegRYbtLFW+jRJ
+  ftI2prw/WV0DR1fg0bjYZT2Z/RDPuSn8niYNW/GB6O9FaFX5mtQ1hEqnWEWwr/qI
+  Lmn22Nty69HSO4js8RB0/VAAT/TuxXfsgXwsbZklC0dawedPwMwBU2LCWf402XBF
+  ZedumUWym3sXrRv9S6GYgYYSihoW8Jo21JBFfcgOaxO4yW6d4q5ogrdlBJabiUdl
+  NBTK+9ECgYEA/g7TbF+xQgOuw/NOKWOmVGA80Bbp9TWt7K8Gx1uLqivVMjgZkPNx
+  RzG1MXhwIoj5ULvB1sqIZW0cohAZkKI8fB+jjwu09kqbhVFRJilAq8cW+aGkOOyy
+  3SDdi8EO8yycEhgLD3Mv4qngp8dDOTOwIbp8KznPwmyw8QxIjDv3OBcCgYEA0ZdV
+  KE7t22MW5Ta9SWjNJ18sd/PCkEnFBIEsonQzCbG7CkrZ6F+nM1bZYToNToN8fE2m
+  4Gh8Pa7kf425yjD9DpJWikn/HLOw7LdXxZs8StlmSd+v2BmHkRXHEh1yplNAjfnV
+  3/87i2Gf74C8/WZbFXq0nllimbUT8U8WFAdWK/sCgYAX7Bd2XfBX8fbT1qYmeY6g
+  5Ur0oSO4hixxW+28ed9Fz8jMaMHnhzTEambQWLHeXp1zP6q56eo7+rE2hWOS3ePq
+  ICSLhKOuiUnpnMWSXVIMmruMF+9ZuNgCwGR8E1qwBSRRA9iOxN7ebfaMddPboAVW
+  t7OXcmMgwJFMsUZnhgH6UwKBgQDAUlZBA5Q9cQKsV/t/ZhyCmVGrzFDnp9mSlZnI
+  hEnlBmK0QhUMpuE9Od+E2Qkm136ebX7IgvgmfdqMtRcb0rIS8fNZOCdRRg3+WQrA
+  d/7uS+kRtqGb8Wk1l78w/zaaKuCcpvk7bvBLqMxisEY7W/YOkqc0ep8AnmlrT3/Z
+  5xWKiwKBgHYkVGcpNttX2lvmHJpY7DwNyTmPRHQgbpukkgGNb6MUd2VVZM7pqmEj
+  Z79W9wdDABIjRk2DmBZBy8/HiknNiCu5bxaamdBM0/2yloaZtDs4NR0mUqd8wFGU
+  C9Al1RD5K1Lw+S6/83BJX5pxrYKXtWMzVWdDgTa/gEdNdjX7XBVF
+  -----END RSA PRIVATE KEY-----
+
+rancid_ssh_public_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQAEndG+S/BYZGao/9ie5V+HTJQhedvdSGtB7vaxI6MWVa8iPqJuslBx/foAytQIZB8LcyFugyVAd01mGkk/67ZFbH556mEe8VfQTVeCSikIiWW7DfZuT16govLXaPoU293+QQ+H64dd/n8KJxveRAsesoW5UFuRQwqwelQDs/QKGoA4IzhO6/ylUF5Pdtea4eo/C/L5L1EVquHGammZ6SJLlsNzUpAeBleZM9qZMWa6Y2bceiOHsjYz0XGbsjrPqD9EWaRt47a3WoJwPmHovK6kkBvVUUGcVMukH6HGtDcT4CWT8BrX8WvxYcgIpyWtxM346Ekpb7/oA18vLKiduN rancid'
