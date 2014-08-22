@@ -16,17 +16,21 @@
   ignore_errors: true
   tags: [ "rancid" , "updaterancid" ]
 
+- set_fact: install_rancid=true
+  when: "rancidgit_status.stdout != 'rancid-git-{{ rancid_version }}.el6.x86_64'"
+  tags: [ "rancid" , "updaterancid" ]
+
 - name: Copy rancid-git rpm
   copy: src=rancid-git-{{ rancid_version }}.el6.x86_64.rpm dest=/tmp/ owner=root group=root mode=0644
-  when: "rancidgit_status.stdout != 'rancid-git-{{ rancid_version }}.el6.x86_64'"
+  when: install_rancid
   tags: [ "rancid" , "updaterancid" ]
 
 - name: Install rancid-git
   command: rpm -Uvh /tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm
-  when: "rancidgit_status.stdout != 'rancid-git-{{ rancid_version }}.el6.x86_64'"
+  when: install_rancid
   tags: [ "rancid" , "updaterancid" ]
 
 - name: Remove rancid-git rpm
   file: path=/tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm state=absent
-  when: "rancidgit_status.stdout != 'rancid-git-{{ rancid_version }}.el6.x86_64'"
+  when: install_rancid
   tags: [ "rancid" , "updaterancid" ]
