@@ -31,7 +31,7 @@
   tags: rancid
 
 - name: Convert rancid_git_remotes.name into a list
-  set_fact: git_remote_list="{{ rancid_git_remotes | map(attribute='name') | list }}"
+  set_fact: "git_remote_list='{{ rancid_git_remotes | map(attribute='name') | list }}'"
   tags: rancid
 
 - name: Remove git remotes
