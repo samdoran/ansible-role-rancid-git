@@ -43,7 +43,8 @@
 
 - name: Push to git remotes
   command: git push {{ item.name }} master chdir={{ rancid_home }}
-  changed_when: false
+  register: push_status
+  changed_when: "item.url in push_status.stderr"
   sudo_user: rancid
   with_items: rancid_git_remotes
   tags: rancid
