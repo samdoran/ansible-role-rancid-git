@@ -28,7 +28,7 @@
   tags: rancid
 
 - name: Check if LIST_OF_GROUPS has changed
-  shell: egrep '^LIST_OF_GROUPS' /etc/rancid/rancid.conf | awk -F \\\" '{print $2}'
+  shell: 'egrep "^LIST_OF_GROUPS" /etc/rancid/rancid.conf | awk -F "\"" "{print \$2}"'
   register: current_list_of_groups
   changed_when: false
   tags: rancid
@@ -54,7 +54,7 @@
 - name: Run rancid-cvs
   command: /usr/libexec/rancid/rancid-cvs
   sudo_user: rancid
-  when: current_list_of_groups.stdout != '{{ rancid_list_of_groups }}'
+  when: "current_list_of_groups.stdout != '{{ rancid_list_of_groups }}'"
   tags: rancid
 
 - name: Configure router.db for groups
