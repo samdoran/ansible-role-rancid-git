@@ -1,38 +1,64 @@
-Role Name
-========
+RANCID
+======
 
 A brief description of the role goes here.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+SSH pubilc key installed on remote git repository/repositories.
+Write access to all git repositories
+SSH access to all network devices via `rancid` user account and password
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+**rancid_version** Version number in rancid rpm filename.
+
+**rancid_repo_dir** Where the repository will go. (Default: /var/rancid/git)
+
+**rancid_home** Home directory for rancid user. (Default: /var/rancid)
+
+**rancid_git_name** Name used for git commits.
+
+**rancid_git_email** Email used for git commits.
+
+**install_rancid** Whether or not to install rancid. This gets changed via set_fact when `rancid_version` does not match the installed version.
+
+**rancid_list_of_groups** Space delimited list of groups added to `LIST_OF_GROUPS` in `/etc/rancid/rancid.conf`. (Default: firewalls routers switches)
+
+**rancid_notify_groups** For each group in LIST_OF_GROUPS, who gets emailed the diffs. Added to `/etc/aliases`.
+
+**rancid_network_devices** Create one entry per network device witch `name`, `type`, `ip`, `state`, and `group`. Refer to RANCID documentation for appropriate values for `type`.
+
+**rancid_git_remotes** Repository/repositories where changes are pushed
+
+**rancid_ssh_private_key** Multiline variable containing the SSH private key used by the `rancid` account. If this variable is not defined, a key will be created. **This should be stored in an Ansible vault.**
+
+**rancid_ssh_public_key** SSH pubilc key used by the `rancid` user. If `rancid_ssh_private_key` is not defined, a key will be generated.
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None.
 
 Example Playbook
 -------------------------
+    - name: Setup RANCID
+      hosts: server
+      sudo: yes
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+      vars:
+          rancid_ssh_public_key: 'ssh-rsa foo== rancid'
+          rancid_git_name: Rancid
+          rancid_git_email: rancid@acme.com
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+        roles:
+          - rancid
 
 License
 -------
 
-BSD
+MIT
 
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
