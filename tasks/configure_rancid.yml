@@ -65,7 +65,7 @@
   tags: rancid
 
 - name: Configure router.db for groups
-  template: src=router.db.j2 dest={{ rancid_home }}/test/{{ item.group }}/router.db
+  template: src=router.db.j2 dest={{ rancid_home }}/{{ item.group }}/router.db
   sudo_user: rancid
   with_items: rancid_network_devices
   tags: [ 'rancid' , 'routerdb' , 'devices' ]
