@@ -65,6 +65,15 @@
     password: "{{ rancid_password_hash }}"
   tags: rancid
 
+- name: Add /usr/libexec/rancid to PATH for rancid user
+  lineinfile:
+    state: present
+    backup: yes
+    dest: "{{ rancid_home }}/.bash_profile"
+    line: 'PATH=$PATH:/usr/libexec/rancid'
+    insertbefore: 'export PATH'
+  tags: [ 'rancid' , 'rancidprofile' ]
+
 - name: Check if LIST_OF_GROUPS has changed
   shell: 'egrep "^LIST_OF_GROUPS" /etc/rancid/rancid.conf | awk -F "\"" "{print \$2}"'
   register: current_list_of_groups
