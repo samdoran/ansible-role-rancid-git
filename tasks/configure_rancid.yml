@@ -108,7 +108,7 @@
     mode: 0644
   register: aliases_status
   notify: rehash aliases
-  tags: [ 'rancid' , 'rancidpostfix' ]
+  tags: [ 'rancid' , 'rancidpostfix' , 'aliases' ]
 
 - name: Run rancid-cvs
   command: /usr/libexec/rancid/rancid-cvs

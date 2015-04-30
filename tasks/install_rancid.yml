@@ -42,3 +42,15 @@
     state: absent
   when: install_rancid
   tags: [ "rancid" , "updaterancid" ]
+
+- name: Copy bntrancid scripts
+  copy:
+    src: "{{ item }}"
+    dest: /usr/libexec/rancid/
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - bntlogin
+    - bntrancid
+  tags: [ 'rancid' ]
