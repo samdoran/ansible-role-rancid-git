@@ -149,5 +149,5 @@
     user: rancid
     minute: '50'
     hour: '23'
-    job: 'find {{ rancid_home }}/logs -type f -mtime +2 -exec rm {} \\;'
+    job: "find {{ rancid_home }}/logs -type f -mtime +2 -exec rm '{}' ';'"
   tags: [ 'rancid' , 'rancidcron' ]
