@@ -256,9 +256,19 @@ sub WriteTerm {
            ) {
             ProcessHistory("","","","! $1<removed>$'");
             next;
+
+        }
+        # Filter TACACS key because it always changes
+        if ( /(^tacacs-server \w+-host .*?\sekey )(\".*\")/ ) {
+            ProcessHistory("","","","! $1\"<removed>\"$'");
+            next;
         }
 
 	next if (/^Current configuration:/);
+
+    # Filter erronous messages sent by chassis managemnt device sending
+    # DHCP offers to switches
+    next if (/DHCP Offer/);
 
         ProcessHistory("", "", "", "$_");
 
