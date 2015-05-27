@@ -251,7 +251,7 @@ sub WriteTerm {
             next;
         }
         if ( $filter_pwds >= 1 &&
-            /^(access user (\d+ password|administrator-password|operator-password) )(\S+)/ ||
+            /^(access user (\d+ password|administrator-password|operator-password|user-password) )(\S+)/ ||
             /^(radius-server \S+ \S+ ekey )(\S+)/
            ) {
             ProcessHistory("","","","! $1<removed>$'");
@@ -269,6 +269,8 @@ sub WriteTerm {
     # Filter erronous messages sent by chassis managemnt device sending
     # DHCP offers to switches
     next if (/DHCP Offer/);
+    next if (/\tIP: \d+/);
+    next if (/\tBroadcast \d+/);
 
         ProcessHistory("", "", "", "$_");
 
