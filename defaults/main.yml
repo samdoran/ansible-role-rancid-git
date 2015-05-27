@@ -10,10 +10,28 @@ rancid_git_email: rancid@acme.com
 
 # Whether or not to install rancid
 # This gets changed via set_fact
-install_rancid: false
+install_rancid: False
 
 # Space delimited list of groups added to LIST_OF_GROUPS in /etc/rancid/rancid.conf
 rancid_list_of_groups: firewalls routers switches
+
+# Cron job(s)
+# name, state, user, job, and minute are required
+# hour, day, and month are optional
+rancid_cron:
+  - name: run rancid config differ
+    state: present
+    user: rancid
+    hour: 20
+    minute: 0
+    job: "/usr/bin/rancid-run"
+
+  - name: clean out config differ logs
+    state: present
+    user: rancid
+    hour: 23
+    minute: 50
+    job: "find {{ rancid_home }}/logs -type f -mtime +2 -exec rm '{}' ';'"
 
 # For each group in LIST_OF_GROUPS, who gets emailed the diffs.
 # Added to /etc/aliases

@@ -17,7 +17,7 @@
   always_run: True
   tags: [ "rancid" , "updaterancid" ]
 
-- set_fact: install_rancid=true
+- set_fact: install_rancid=True
   when: "rancidgit_status.stdout != 'rancid-git-{{ rancid_version }}.el6.x86_64'"
   tags: [ "rancid" , "updaterancid" ]
 
