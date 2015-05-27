@@ -133,21 +133,15 @@
   with_items: rancid_network_devices
   tags: [ 'rancid' , 'routerdb' , 'devices' ]
 
-- name: Install rancid-run crontab
+- name: Install rancid cron jobs
   cron:
-    name: 'run config differ hourly'
-    state: present
-    user: rancid
-    minute: '36'
-    job: '/usr/bin/rancid-run'
-  tags: [ 'rancid' , 'rancidcron' ]
-
-- name: Install crontab to clean up old rancid logs
-  cron:
-    name: 'clean out config differ logs'
-    state: present
-    user: rancid
-    minute: '50'
-    hour: '23'
-    job: "find {{ rancid_home }}/logs -type f -mtime +2 -exec rm '{}' ';'"
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    user: "{{ item.user }}"
+    month: "{{ item.month | default('*') }}"
+    day: "{{ item.day | default('*') }}"
+    hour: "{{ item.hour | default('*') }}"
+    minute: "{{ item.minute }}"
+    job: "{{ item.job }}"
+  with_items: rancid_cron
   tags: [ 'rancid' , 'rancidcron' ]
