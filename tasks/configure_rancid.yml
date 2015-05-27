@@ -1,72 +1,153 @@
 ---
 - name: Copy hosts file
-  template: src=hosts.j2 dest=/etc/hosts owner=root group=root mode=0644
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644
   tags: [ 'rancid' , 'devices' ]
 
 - name: Add rancid to git group
-  user: name=rancid append=yes groups=git
+  user:
+    name: rancid
+    append: yes
+    groups: git
   tags: rancid
 
 - name: Change permissions on {{ rancid_home }}
-  file: path={{ rancid_home }} owner=root group=rancid mode=0770
+  file:
+    path: "{{ rancid_home }}"
+    owner: root
+    group: rancid
+    mode: 0770
   tags: rancid
 
 - name: Create .ssh folder for rancid user
-  file: path={{ rancid_home }}/.ssh state=directory owner=rancid group=rancid mode=700
+  file:
+    path: "{{ rancid_home }}/.ssh"
+    state: directory
+    owner: rancid
+    group: rancid
+    mode: 0700
   tags: rancid
 
 - name: Install SSH public key for rancid user
-  template: src=rancid_id_rsa.pub.j2 dest={{ rancid_home }}/.ssh/id_rsa.pub owner=rancid group=rancid mode=640
+  template:
+    src: rancid_id_rsa.pub.j2
+    dest: "{{ rancid_home }}/.ssh/id_rsa.pub"
+    owner: rancid
+    group: rancid
+    mode: 0640
+  when: rancid_ssh_public_key is defined
   tags: rancid
 
 - name: Install SSH private key for rancid user
-  template: src=rancid_id_rsa.j2 dest={{ rancid_home }}/.ssh/id_rsa owner=rancid group=rancid mode=400
+  template:
+    src: rancid_id_rsa.j2
+    dest: "{{ rancid_home }}/.ssh/id_rsa"
+    owner: rancid
+    group: rancid
+    mode: 0400
+  when: rancid_ssh_private_key is defined
+  tags: rancid
+
+- name: Generate SSH key for rancid user if rancid_ssh_private_key is not defined
+  user:
+    name: rancid
+    generate_ssh_key: yes
+  when: rancid_ssh_private_key is not defined
   tags: rancid
 
 - name: Set password for rancid user
-  user: name=rancid password={{ rancid_password_hash }}
+  user:
+    name: rancid
+    password: "{{ rancid_password_hash }}"
   tags: rancid
 
+- name: Add /usr/libexec/rancid to PATH for rancid user
+  lineinfile:
+    state: present
+    backup: yes
+    dest: "{{ rancid_home }}/.bash_profile"
+    line: 'PATH=$PATH:/usr/libexec/rancid'
+    insertbefore: 'export PATH'
+  tags: [ 'rancid' , 'rancidprofile' ]
+
 - name: Check if LIST_OF_GROUPS has changed
-  shell: egrep '^LIST_OF_GROUPS' /etc/rancid/rancid.conf | awk -F \\\" '{print $2}'
+  shell: 'egrep "^LIST_OF_GROUPS" /etc/rancid/rancid.conf | awk -F "\"" "{print \$2}"'
   register: current_list_of_groups
   changed_when: false
+  always_run: True
   tags: rancid
 
 - name: Copy rancid.conf
-  template: src=rancid.conf.j2 dest=/etc/rancid/rancid.conf owner=root group=rancid mode=0640
+  template:
+    src: rancid.conf.j2
+    dest: /etc/rancid/rancid.conf
+    owner: root
+    group: rancid
+    mode: 0640
   tags: [ 'rancid' , 'rancidconf' ]
 
 - name: Copy lg.conf
-  template: src=lg.conf.j2 dest=/etc/rancid/lg.conf owner=root group=rancid mode=0640
+  template:
+    src: lg.conf.j2
+    dest: /etc/rancid/lg.conf
+    owner: root
+    group: rancid
+    mode: 0640
   tags: [ 'rancid' , 'rancidconf' ]
 
 - name: Copy cloginrc
-  template: src=cloginrc.j2 dest={{ rancid_home }}/.cloginrc owner=root group=rancid mode=0640
+  template:
+    src: cloginrc.j2
+    dest: "{{ rancid_home }}/.cloginrc"
+    owner: root
+    group: rancid
+    mode: 0640
   tags: [ 'rancid' , 'cloginrc' , 'devices' ]
 
 - name: Copy postfix aliases
-  template: src=aliases.j2 dest=/etc/aliases owner=root group=root mode=0644
+  template:
+    src: aliases.j2
+    dest: /etc/aliases
+    owner: root
+    group: root
+    mode: 0644
   register: aliases_status
   notify: rehash aliases
-  tags: [ 'rancid' , 'rancidpostfix' ]
+  tags: [ 'rancid' , 'rancidpostfix' , 'aliases' ]
 
 - name: Run rancid-cvs
   command: /usr/libexec/rancid/rancid-cvs
   sudo_user: rancid
-  when: current_list_of_groups.stdout != '{{ rancid_list_of_groups }}'
+  when: "current_list_of_groups.stdout !=  '{{ rancid_list_of_groups }}'"
   tags: rancid
 
 - name: Configure router.db for groups
-  lineinfile: "dest={{ rancid_home }}/{{ item.group }}/router.db regexp='^{{ item.name }}' line='{{ item.name }}:{{ item.type }}:{{ item.state }}'"
+  template:
+    src: router.db.j2
+    dest: "{{ rancid_home }}/{{ item.group }}/router.db"
   sudo_user: rancid
   with_items: rancid_network_devices
   tags: [ 'rancid' , 'routerdb' , 'devices' ]
 
 - name: Install rancid-run crontab
-  cron: "name='run config differ hourly' state=present user=rancid minute='36' job='/usr/bin/rancid-run'"
+  cron:
+    name: 'run config differ hourly'
+    state: present
+    user: rancid
+    minute: '36'
+    job: '/usr/bin/rancid-run'
   tags: [ 'rancid' , 'rancidcron' ]
 
 - name: Install crontab to clean up old rancid logs
-  cron: "name='clean out config differ logs' state=present user=rancid minute='50' hour='23' job='find {{ rancid_home }}/logs -type f -mtime +2 -exec rm {} \\;'"
+  cron:
+    name: 'clean out config differ logs'
+    state: present
+    user: rancid
+    minute: '50'
+    hour: '23'
+    job: 'find {{ rancid_home }}/logs -type f -mtime +2 -exec rm {} \\;'
   tags: [ 'rancid' , 'rancidcron' ]

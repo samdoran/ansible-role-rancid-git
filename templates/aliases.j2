@@ -98,4 +98,5 @@ alec@pyron.com, \root
 # rancid notification groups
 {% for item in rancid_notify_groups %}
 rancid-{{ item.group }}:     {{ item.notify }}
+rancid-admin-{{ item.group }}:     {{ item.admin_notify }}
 {% endfor %}

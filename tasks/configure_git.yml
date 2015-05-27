@@ -1,13 +1,21 @@
 ---
 - name: Copy gitconfig
-  template: src=gitconfig.j2 dest={{ rancid_home }}/.gitconfig owner=rancid group=rancid mode=0640
+  template:
+    src: gitconfig.j2
+    dest: "{{ rancid_home }}/.gitconfig"
+    owner: rancid
+    group: rancid
+    mode: 0640
   tags: rancid
 
 - name: List current git remotes
-  command: git remote chdir={{ rancid_home }}
+  command: >
+    git remote
+    chdir={{ rancid_home }}
   sudo_user: rancid
   register: current_git_remotes
   changed_when: false
+  always_run: True
   tags: rancid
 
 - name: Get SSH key of git remotes
@@ -15,35 +23,48 @@
   changed_when: false
   register: git_remote_host_key
   with_items: rancid_git_remotes
+  always_run: True
   tags: rancid
 
 - name: Add SSH key of git remotes to known_hosts
-  lineinfile: "create=yes state=present dest=~rancid/.ssh/known_hosts line='{{ item.stdout }}'"
+  lineinfile:
+    create: yes
+    state: present
+    dest: ~rancid/.ssh/known_hosts
+    line: "{{ item.stdout }}"
   sudo_user: rancid
   with_items: git_remote_host_key.results
   tags: rancid
 
 - name: Add git remotes
-  command: git remote add {{ item.name }} {{ item.url }} chdir={{ rancid_home }}
+  command: >
+    git remote add {{ item.name }} {{ item.url }}
+    chdir={{ rancid_home }}
   sudo_user: rancid
   with_items: rancid_git_remotes
   when: "item.name not in current_git_remotes.stdout_lines"
   tags: rancid
 
 - name: Convert rancid_git_remotes.name into a list
-  set_fact: git_remote_list="{{ rancid_git_remotes | map(attribute='name') | list }}"
+  set_fact:
+    git_remote_list: "{{ rancid_git_remotes | map(attribute = 'name') | list }}"
   tags: rancid
 
 - name: Remove git remotes
-  command: git remote rm {{ item }} chdir={{ rancid_home }}
+  command: >
+    git remote rm {{ item }}
+    chdir={{ rancid_home }}
   sudo_user: rancid
   with_items: current_git_remotes.stdout_lines
   when: "item not in git_remote_list"
   tags: rancid
 
 - name: Push to git remotes
-  command: git push {{ item.name }} master chdir={{ rancid_home }}
-  changed_when: false
+  command: >
+    git push {{ item.name }} master
+    chdir={{ rancid_home }}
+  register: push_status
+  changed_when: "item.url in push_status.stderr"
   sudo_user: rancid
   with_items: rancid_git_remotes
   tags: rancid
