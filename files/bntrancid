@@ -271,6 +271,7 @@ sub WriteTerm {
     next if (/DHCP Offer/);
     next if (/\tIP: \d+/);
     next if (/\tBroadcast \d+/);
+    next if (/^$/);
 
         ProcessHistory("", "", "", "$_");
 
