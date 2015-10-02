@@ -8,6 +8,7 @@
     mode: 0644
   tags:
     - rancid
+    - routerdb
     - devices
 
 - name: Add rancid to git group
