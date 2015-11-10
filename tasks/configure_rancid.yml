@@ -6,7 +6,10 @@
     owner: root
     group: root
     mode: 0644
-  tags: [ 'rancid' , 'devices' ]
+  tags:
+    - rancid
+    - routerdb
+    - devices
 
 - name: Add rancid to git group
   user:
@@ -72,7 +75,10 @@
     dest: "{{ rancid_home }}/.bash_profile"
     line: 'PATH=$PATH:/usr/libexec/rancid'
     insertbefore: 'export PATH'
-  tags: [ 'rancid' , 'rancidprofile' ]
+  tags:
+    - rancid
+    - rancidprofile
+
 
 - name: Check if LIST_OF_GROUPS has changed
   shell: 'egrep "^LIST_OF_GROUPS" /etc/rancid/rancid.conf | awk -F "\"" "{print \$2}"'
@@ -97,7 +103,10 @@
     owner: root
     group: rancid
     mode: 0640
-  tags: [ 'rancid' , 'rancidconf' ]
+  tags:
+    - rancid
+    - rancidconf
+
 
 - name: Copy cloginrc
   template:
@@ -106,7 +115,10 @@
     owner: root
     group: rancid
     mode: 0640
-  tags: [ 'rancid' , 'cloginrc' , 'devices' ]
+  tags:
+    - rancid
+    - cloginrc
+    - devices
 
 - name: Copy postfix aliases
   template:
@@ -117,7 +129,10 @@
     mode: 0644
   register: aliases_status
   notify: rehash aliases
-  tags: [ 'rancid' , 'rancidpostfix' , 'aliases' ]
+  tags:
+    - rancid
+    - rancidpostfix
+    - aliases
 
 - name: Run rancid-cvs
   command: /usr/libexec/rancid/rancid-cvs
@@ -131,7 +146,10 @@
     dest: "{{ rancid_home }}/{{ item.group }}/router.db"
   sudo_user: rancid
   with_items: rancid_network_devices
-  tags: [ 'rancid' , 'routerdb' , 'devices' ]
+  tags:
+    - rancid
+    - routerdb
+    - devices
 
 - name: Install rancid cron jobs
   cron:
@@ -144,4 +162,7 @@
     minute: "{{ item.minute }}"
     job: "{{ item.job }}"
   with_items: rancid_cron
-  tags: [ 'rancid' , 'rancidcron' ]
+  tags:
+    - rancid
+    - rancidcron
+
