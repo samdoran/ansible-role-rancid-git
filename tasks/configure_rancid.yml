@@ -79,11 +79,10 @@
     - rancid
     - rancidprofile
 
-
 - name: Check if LIST_OF_GROUPS has changed
   shell: 'egrep "^LIST_OF_GROUPS" /etc/rancid/rancid.conf | awk -F "\"" "{print \$2}"'
   register: current_list_of_groups
-  changed_when: false
+  changed_when: False
   always_run: True
   tags: rancid
 
@@ -106,7 +105,6 @@
   tags:
     - rancid
     - rancidconf
-
 
 - name: Copy cloginrc
   template:
