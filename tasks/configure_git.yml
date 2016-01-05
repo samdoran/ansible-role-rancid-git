@@ -18,23 +18,16 @@
   always_run: True
   tags: rancid
 
-- name: Get SSH key of git remotes
-  shell: /usr/bin/ssh-keyscan {{ item.hostname }}
-  changed_when: false
-  register: git_remote_host_key
-  with_items: rancid_git_remotes
-  always_run: True
-  tags: rancid
-
-- name: Add SSH key of git remotes to known_hosts
-  lineinfile:
-    create: yes
+- name: Add host keys to known_hosts
+  known_hosts:
+    name: "{{ item.hostname }}"
     state: present
-    dest: ~rancid/.ssh/known_hosts
-    line: "{{ item.stdout }}"
-  sudo_user: rancid
-  with_items: git_remote_host_key.results
-  tags: rancid
+    key: "{{ item.host_key }}"
+  become_user: rancid
+  with_items: rancid_git_remotes
+  tags:
+    - rancid
+    - known_hosts
 
 - name: Add git remotes
   command: >
