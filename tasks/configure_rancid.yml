@@ -134,7 +134,7 @@
 
 - name: Run rancid-cvs
   command: /usr/libexec/rancid/rancid-cvs
-  sudo_user: rancid
+  become_user: rancid
   when: "current_list_of_groups.stdout !=  '{{ rancid_list_of_groups }}'"
   tags: rancid
 
@@ -142,7 +142,7 @@
   template:
     src: router.db.j2
     dest: "{{ rancid_home }}/{{ item.group }}/router.db"
-  sudo_user: rancid
+  become_user: rancid
   with_items: rancid_network_devices
   tags:
     - rancid
