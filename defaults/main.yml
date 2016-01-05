@@ -3,6 +3,19 @@
 rancid_version: 2.3.9-2
 rancid_repo_dir: /var/rancid/git
 rancid_home: /var/rancid
+rancid_umask: 027
+rancid_tmpdir: /tmp
+rancid_aclsort: ""                          # YES | NO
+rancid_nopipe: ""                           # YES | NO
+rancid_filter_pwds: NO                      # NO | YES | ALL
+rancid_nocommstr: NO                        # YES | NO
+rancid_maxrounds: 4                         # How many times to retry failed collections. Minimum 1.
+rancid_oldtime: 24                          # How many hours befoure complaining about devices that cannot be reached.
+rancid_locktime: 4                          # How many hours before complaining a collection group's lockfile is hung.
+rancid_par_count: 5                         # Number of devices that can collect simultaneously.
+rancid_maildomain: ""
+rancid_htmlmails: NO                        # Colorized diffs in email. Does not work on CentOS.
+rancid_mailheaders: "Precedence: bulk"      # How to mark messages sent by RANCID.
 
 # Name and email for rancid user in git commits
 rancid_git_name: rancid

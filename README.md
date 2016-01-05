@@ -18,6 +18,19 @@ Role Variables
 | `rancid_version` | 2.3.9-2 | Version number in rancid-git rpm filename. |
 | `rancid_repo_dir` | `/var/rancid/git` | Where the repository will go. |
 | `rancid_home` | `/var/rancid` | Home directory for rancid user. | 
+| `rancid_umask` | `027` | Umask used on files created by RANCID. |
+| `rancid_tmpdir` | `/tmp` | Where RANCID keeps temp files. |
+| `rancid_acl_sort` | `[undefined]` | Whether or not to sort ACLs. |
+| `rancid_nopipe` | `[undefined]` |  |
+| `rancid_filter_pwds` | `NO` | How much to filter passwords from the config files. |
+| `rancid_nocommstr` | `NO` | Whether or not to remove SNMP community strings. |
+| `rancid_maxrounds` | `4` | How many times to retry failed devices.  |
+| `rancid_oldtime` | `24` | How many hours befoure complaining about devices that cannot be reached. |
+| `rancid_locktime` | `4` | How many hours before complaining a collection group's lockfile is hung. |
+| `rancid_par_count` | `5` | Number of devices that can collect simultaneously. |
+| `rancid_maildomain` | `[undefined]` | Only needed if you want to adjust the mail delivery settings based on domain. |
+| `rancid_htmlmails` | `NO` | Whether to send colorized diffs in email. Does not work on CentOS. |
+| `rancid_mailheaders` | `Precedence: bulk` | How to mark messages sent by RANCID. |
 | `rancid_git_name` | `rancid` | Name used for git commits. |
 | `rancid_git_email` | `rancid@acme.com` | Email used for git commits. |
 | `install_rancid` | `False` | Whether or not to install rancid. This gets changed via set_fact when `rancid_version` does not match the installed version. |

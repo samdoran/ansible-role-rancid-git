@@ -93,7 +93,9 @@
     owner: root
     group: rancid
     mode: 0640
-  tags: [ 'rancid' , 'rancidconf' ]
+  tags:
+    - rancid
+    - rancidconf
 
 - name: Copy lg.conf
   template:
