@@ -58,9 +58,10 @@ rancid_network_devices:
 # An empty repository must exist and the rancid user must have SSH access
 # before running this role
 rancid_git_remotes:
-  - name: origin
-    hostname: git.acme.com
-    url:  git@git.acme.com:rancid/network-configs.git
+  - name: origin                                        # What the remote will be labeled in git.
+    hostname: git.acme.com                              # Used for creating the known_hosts entry.
+    host_key: "git.acme.com ssh-rsa AAAAB3Nza..."       # Used for creating the known_hosts entry. The hostname here must match the hostname above.
+    url: git@git.acme.com:rancid/network-configs.git    # The git URL. If using a custom port for ssh, make sure to use the 'ssh://host.foo.com:9980' format.
 
 # SSH keys for rancid user
 # Recommend storing these in an Ansible vault
@@ -71,3 +72,4 @@ rancid_git_remotes:
 #   -----END RSA PRIVATE KEY-----
 
 # rancid_ssh_public_key: 'Public key goes here'
+# rancid_password_hash: $6$rounds=100000$Hj9U6KCaW69eFYC9$zYfuwU/oRYoiXhhlwy2HgHaSv/ZIhywYYOxRQnJleYXtvtnn7jJT8Ax2q.xnyeaxqDbumbb/bYl6p8q4itRNM0

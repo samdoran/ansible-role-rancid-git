@@ -79,11 +79,10 @@
     - rancid
     - rancidprofile
 
-
 - name: Check if LIST_OF_GROUPS has changed
   shell: 'egrep "^LIST_OF_GROUPS" /etc/rancid/rancid.conf | awk -F "\"" "{print \$2}"'
   register: current_list_of_groups
-  changed_when: false
+  changed_when: False
   always_run: True
   tags: rancid
 
@@ -106,7 +105,6 @@
   tags:
     - rancid
     - rancidconf
-
 
 - name: Copy cloginrc
   template:
@@ -136,7 +134,7 @@
 
 - name: Run rancid-cvs
   command: /usr/libexec/rancid/rancid-cvs
-  sudo_user: rancid
+  become_user: rancid
   when: "current_list_of_groups.stdout !=  '{{ rancid_list_of_groups }}'"
   tags: rancid
 
@@ -144,7 +142,7 @@
   template:
     src: router.db.j2
     dest: "{{ rancid_home }}/{{ item.group }}/router.db"
-  sudo_user: rancid
+  become_user: rancid
   with_items: rancid_network_devices
   tags:
     - rancid

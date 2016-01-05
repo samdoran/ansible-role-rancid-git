@@ -1,6 +1,8 @@
 ---
-- name: Install deps for rancid-git
-  yum: name={{ item }} state=present
+- name: Install dependencies for rancid-git
+  yum:
+    name: "{{ item }} "
+    state: present
   with_items:
     - expect
     - git
@@ -14,8 +16,8 @@
 - name: Check if rancid-git is already installed
   command: rpm -q rancid-git
   register: rancidgit_status
-  changed_when: false
-  ignore_errors: true
+  changed_when: False
+  ignore_errors: True
   always_run: True
   tags:
     - rancid

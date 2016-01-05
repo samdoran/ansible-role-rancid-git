@@ -12,35 +12,28 @@
   command: >
     git remote
     chdir={{ rancid_home }}
-  sudo_user: rancid
+  become_user: rancid
   register: current_git_remotes
   changed_when: false
   always_run: True
   tags: rancid
 
-- name: Get SSH key of git remotes
-  shell: /usr/bin/ssh-keyscan {{ item.hostname }}
-  changed_when: false
-  register: git_remote_host_key
-  with_items: rancid_git_remotes
-  always_run: True
-  tags: rancid
-
-- name: Add SSH key of git remotes to known_hosts
-  lineinfile:
-    create: yes
+- name: Add host keys to known_hosts
+  known_hosts:
+    name: "{{ item.hostname }}"
     state: present
-    dest: ~rancid/.ssh/known_hosts
-    line: "{{ item.stdout }}"
-  sudo_user: rancid
-  with_items: git_remote_host_key.results
-  tags: rancid
+    key: "{{ item.host_key }}"
+  become_user: rancid
+  with_items: rancid_git_remotes
+  tags:
+    - rancid
+    - known_hosts
 
 - name: Add git remotes
   command: >
     git remote add {{ item.name }} {{ item.url }}
     chdir={{ rancid_home }}
-  sudo_user: rancid
+  become_user: rancid
   with_items: rancid_git_remotes
   when: "item.name not in current_git_remotes.stdout_lines"
   tags: rancid
@@ -54,7 +47,7 @@
   command: >
     git remote rm {{ item }}
     chdir={{ rancid_home }}
-  sudo_user: rancid
+  become_user: rancid
   with_items: current_git_remotes.stdout_lines
   when: "item not in git_remote_list"
   tags: rancid
@@ -65,6 +58,6 @@
     chdir={{ rancid_home }}
   register: push_status
   changed_when: "item.url in push_status.stderr"
-  sudo_user: rancid
+  become_user: rancid
   with_items: rancid_git_remotes
   tags: rancid
