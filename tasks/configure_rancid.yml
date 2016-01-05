@@ -97,17 +97,6 @@
     - rancid
     - rancidconf
 
-- name: Copy lg.conf
-  template:
-    src: lg.conf.j2
-    dest: /etc/rancid/lg.conf
-    owner: root
-    group: rancid
-    mode: 0640
-  tags:
-    - rancid
-    - rancidconf
-
 - name: Copy cloginrc
   template:
     src: cloginrc.j2
