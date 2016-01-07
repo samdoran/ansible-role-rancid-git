@@ -1,7 +1,7 @@
 ---
 - name: Install dependencies for rancid-git
   yum:
-    name: "{{ item }} "
+    name: "{{ item }}"
     state: present
   with_items:
     - expect
@@ -9,6 +9,13 @@
     - perl-CGI
     - perl-LockFile-Simple
     - perl-MailTools
+  tags:
+    - rancid
+    - yum
+
+- name: Install Python packages
+  easy_install:
+    name: ansi2html
   tags:
     - rancid
     - yum
