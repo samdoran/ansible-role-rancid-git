@@ -12,11 +12,9 @@ RCSSYS=git-remote; export RCSSYS
 {% if rancid_aclsort is defined and rancid_aclsort != "" %}
 ACLSORT={{ rancid_aclsort }}; export ACLSORT
 {% endif %}
-
 {% if rancid_nopipe is defined and rancid_nopipe != "" %}
 NOPIPE={{ rancid_nopipe }}; export NOPIPE
 {% endif %}
-
 FILTER_PWDS={{ rancid_filter_pwds }}; export FILTER_PWDS
 NOCOMMSTR={{ rancid_nocommstr }}; export NOCOMMSTR
 MAX_ROUNDS={{ rancid_maxrounds }}; export MAX_ROUNDS
@@ -27,7 +25,6 @@ LIST_OF_GROUPS="{{ rancid_list_of_groups }}"; export LIST_OF_GROUPS
 {% if rancid_maildomain is defined and rancid_maildomain != "" %}
 MAILDOMAIN="{{ rancid_maildomain }}"; export MAILDOMAIN
 {% endif %}
-
 HTMLMAILS={{ rancid_htmlmails }}; export HTMLMAILS
 {% if rancid_mailheaders is defined and rancid_mailheaders != "" %}
 MAILHEADERS="{{ rancid_mailheaders }}"; export MAILHEADERS
