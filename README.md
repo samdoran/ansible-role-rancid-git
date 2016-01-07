@@ -29,7 +29,7 @@ Role Variables
 | `rancid_locktime` | `4` | How many hours before complaining a collection group's lockfile is hung. |
 | `rancid_par_count` | `5` | Number of devices that can collect simultaneously. |
 | `rancid_maildomain` | `[undefined]` | Only needed if you want to adjust the mail delivery settings based on domain. |
-| `rancid_htmlmails` | `NO` | Whether to send colorized diffs in email. Does not work on CentOS. |
+| `rancid_htmlmails` | `NO` | Whether to send colorized diffs in email. |
 | `rancid_mailheaders` | `Precedence: bulk` | How to mark messages sent by RANCID. |
 | `rancid_git_name` | `rancid` | Name used for git commits. |
 | `rancid_git_email` | `rancid@acme.com` | Email used for git commits. |
