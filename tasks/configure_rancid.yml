@@ -11,13 +11,6 @@
     - routerdb
     - devices
 
-- name: Add rancid to git group
-  user:
-    name: rancid
-    append: yes
-    groups: git
-  tags: rancid
-
 - name: Change permissions on {{ rancid_home }}
   file:
     path: "{{ rancid_home }}"
