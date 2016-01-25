@@ -9,6 +9,7 @@
     - perl-CGI
     - perl-LockFile-Simple
     - perl-MailTools
+    - python-pip
   tags:
     - rancid
     - yum
