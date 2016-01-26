@@ -7,3 +7,8 @@
 
 - name: rehash aliases
   command: newaliases
+
+- name: reload postfix
+  service:
+    name: postfix
+    state: reloaded

@@ -1,0 +1,42 @@
+---
+- name: POSTFIX | Install postfix
+  yum:
+    name: postfix
+    state: present
+  tags:
+    - rancid
+    - rancid-postfix
+
+- name: POSTFIX | Stop and disable sendmail
+  service:
+    name: sendmail
+    state: stopped
+    enabled: no
+  failed_when: False
+  tags:
+    - rancid
+    - rancid-postfix
+
+- name: POSTFIX | Configure postfix
+  lineinfile:
+    state: present
+    backup: yes
+    dest: /etc/postfix/main.cf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: "^#?relayhost = ", line: "relayhost = {{ rancid_relayhost }}" }
+    - { regexp: "^inet_interfaces = ", line: "inet_interfaces = localhost" }
+  notify: reload postfix
+  tags:
+    - rancid
+    - rancid-postfix
+
+- name: POSTFIX | Start and enable postfix
+  service:
+    name: postfix
+    enabled: yes
+    state: started
+  tags:
+    - rancid
+    - rancid-postfix

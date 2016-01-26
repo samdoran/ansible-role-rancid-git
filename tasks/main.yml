@@ -2,3 +2,6 @@
 - include: install_rancid.yml
 - include: configure_rancid.yml
 - include: configure_git.yml
+
+- include: configure_postfix.yml
+  when: rancid_configure_postfix
