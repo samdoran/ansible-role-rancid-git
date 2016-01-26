@@ -96,19 +96,25 @@
     - cloginrc
     - devices
 
-- name: Copy postfix aliases
-  template:
-    src: aliases.j2
+- name: Configure notify groups
+  lineinfile:
+    state: present
     dest: /etc/aliases
-    owner: root
-    group: root
-    mode: 0644
-  register: aliases_status
+    line: "rancid-{{ item.group }}:     {{ item.notify }}"
+  with_items: rancid_notify_groups
   notify: rehash aliases
   tags:
-    - rancid
-    - rancidpostfix
-    - aliases
+    - debug
+
+- name: Configure admin notify groups
+  lineinfile:
+    state: present
+    dest: /etc/aliases
+    line: "rancid-admin-{{ item.group }}:     {{ item.admin_notify }}"
+  with_items: rancid_notify_groups
+  notify: rehash aliases
+  tags:
+    - debug
 
 - name: Configure router.db for groups
   template:
