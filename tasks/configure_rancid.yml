@@ -79,6 +79,7 @@
     owner: root
     group: rancid
     mode: 0640
+  notify: run rancid-cvs
   tags:
     - rancid
     - rancidconf
@@ -108,13 +109,6 @@
     - rancid
     - rancidpostfix
     - aliases
-
-- name: Run rancid-cvs
-  command: /usr/libexec/rancid/rancid-cvs
-  become_user: rancid
-  register: rancidcvs_run
-  changed_when: rancidcvs_run.stdout != ''
-  tags: rancid
 
 - name: Configure router.db for groups
   template:
