@@ -104,7 +104,8 @@
   with_items: rancid_notify_groups
   notify: rehash aliases
   tags:
-    - debug
+    - rancid
+    - rancid-postfix
 
 - name: Configure admin notify groups
   lineinfile:
@@ -114,7 +115,8 @@
   with_items: rancid_notify_groups
   notify: rehash aliases
   tags:
-    - debug
+    - rancid
+    - rancid-postfix
 
 - name: Configure router.db for groups
   template:
