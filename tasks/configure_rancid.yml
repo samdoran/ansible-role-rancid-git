@@ -137,6 +137,7 @@
   cron:
     name: "{{ item.name }}"
     state: "{{ item.state }}"
+    disabled: "{{ item.disabled | default('no') }}"
     user: "{{ item.user }}"
     month: "{{ item.month | default('*') }}"
     day: "{{ item.day | default('*') }}"
