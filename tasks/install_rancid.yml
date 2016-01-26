@@ -21,22 +21,6 @@
     - rancid
     - yum
 
-- name: Check if rancid-git is already installed
-  command: rpm -q rancid-git
-  register: rancidgit_status
-  changed_when: False
-  ignore_errors: True
-  always_run: True
-  tags:
-    - rancid
-    - updaterancid
-
-- set_fact: install_rancid=True
-  when: "rancidgit_status.stdout != 'rancid-git-{{ rancid_version }}.el6.x86_64'"
-  tags:
-    - rancid
-    - updaterancid
-
 - name: Copy rancid-git rpm
   copy:
     src: rancid-git-{{ rancid_version }}.el6.x86_64.rpm
@@ -44,7 +28,6 @@
     owner: root
     group: root
     mode: 0644
-  when: install_rancid
   tags:
     - rancid
     - updaterancid
@@ -53,16 +36,6 @@
   yum:
     name: /tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm
     state: present
-  when: install_rancid
-  tags:
-    - rancid
-    - updaterancid
-
-- name: Remove rancid-git rpm
-  file:
-    path: /tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm
-    state: absent
-  when: install_rancid
   tags:
     - rancid
     - updaterancid

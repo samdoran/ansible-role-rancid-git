@@ -11,7 +11,7 @@
     - routerdb
     - devices
 
-- name: Change permissions on {{ rancid_home }}
+- name: Set permissions on {{ rancid_home }}
   file:
     path: "{{ rancid_home }}"
     owner: root
@@ -72,13 +72,6 @@
     - rancid
     - rancidprofile
 
-- name: Check if LIST_OF_GROUPS has changed
-  shell: 'egrep "^LIST_OF_GROUPS" /etc/rancid/rancid.conf | awk -F "\"" "{print \$2}"'
-  register: current_list_of_groups
-  changed_when: False
-  always_run: True
-  tags: rancid
-
 - name: Copy rancid.conf
   template:
     src: rancid.conf.j2
@@ -119,7 +112,8 @@
 - name: Run rancid-cvs
   command: /usr/libexec/rancid/rancid-cvs
   become_user: rancid
-  when: "current_list_of_groups.stdout !=  '{{ rancid_list_of_groups }}'"
+  register: rancidcvs_run
+  changed_when: rancidcvs_run.stdout != ''
   tags: rancid
 
 - name: Configure router.db for groups
