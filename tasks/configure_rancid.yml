@@ -82,7 +82,7 @@
   notify: run rancid-cvs
   tags:
     - rancid
-    - rancidconf
+    - rancid-conf
 
 - name: Copy cloginrc
   template:
@@ -117,6 +117,16 @@
   tags:
     - rancid
     - rancid-postfix
+
+- name: run rancid-cvs
+  command: /usr/libexec/rancid/rancid-cvs
+  become_user: rancid
+  register: rancidcvs_run
+  changed_when: rancidcvs_run.stdout != ''
+  tags:
+    - rancid
+    - rancid-conf
+    - rancid-cvs
 
 - name: Configure router.db for groups
   template:
