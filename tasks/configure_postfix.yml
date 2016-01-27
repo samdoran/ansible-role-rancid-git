@@ -7,12 +7,10 @@
     - rancid
     - rancid-postfix
 
-- name: POSTFIX | Stop and disable sendmail
-  service:
+- name: POSTFIX | Remove sendmail
+  yum:
     name: sendmail
-    state: stopped
-    enabled: no
-  failed_when: False
+    state: absent
   tags:
     - rancid
     - rancid-postfix
