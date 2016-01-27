@@ -23,7 +23,7 @@ rancid_git_name: rancid
 rancid_git_email: rancid@acme.com
 
 # Space delimited list of groups added to LIST_OF_GROUPS in /etc/rancid/rancid.conf
-rancid_list_of_groups: firewalls routers switches
+rancid_list_of_groups: "{{ rancid_network_devices | map(attribute='group') | list | unique | join(' ') }}"
 
 # Cron job(s)
 # name, state, user, job, and minute are required
