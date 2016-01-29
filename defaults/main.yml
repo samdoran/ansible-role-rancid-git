@@ -1,6 +1,6 @@
 ---
 # Some defaults
-rancid_version: 2.3.9-2
+rancid_version: 2.3.9-3.1
 rancid_repo_dir: /var/rancid/git
 rancid_home: /var/rancid
 rancid_umask: 027
