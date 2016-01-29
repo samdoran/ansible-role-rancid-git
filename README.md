@@ -40,6 +40,8 @@ Role Variables
 | `rancid_git_remotes` | (see `defaults.yml`) | Repository/repositories where changes are pushed |
 | `rancid_ssh_private_key` | (see `defaults.yml`) | Multiline variable containing the SSH private key used by the `rancid` account. If this variable is not defined, a key will be created. **This should be stored in an Ansible vault.** |
 | `rancid_ssh_public_key` | (see `defaults.yml`) | SSH pubilc key used by the `rancid` user. If `rancid_ssh_private_key` is not defined, a key will be generated. |
+| `rancid_configure_postfix` | `False` | Whether to configure postfix. Only use if email notifications are desired and email _is not_ configured with another role. |
+| `rancid_relayhost` | `[undefined]` | IP or FQDN of the relay host to send email to. |
 
 
 Dependencies

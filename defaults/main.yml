@@ -7,23 +7,20 @@ rancid_umask: 027
 rancid_tmpdir: /tmp
 rancid_aclsort: ""                          # YES | NO
 rancid_nopipe: ""                           # YES | NO
-rancid_filter_pwds: "NO"                      # NO | YES | ALL
-rancid_nocommstr: "NO"                        # YES | NO
+rancid_filter_pwds: "NO"                    # NO | YES | ALL
+rancid_nocommstr: "NO"                      # YES | NO
 rancid_maxrounds: 4                         # How many times to retry failed collections. Minimum 1.
 rancid_oldtime: 24                          # How many hours befoure complaining about devices that cannot be reached.
 rancid_locktime: 4                          # How many hours before complaining a collection group's lockfile is hung.
 rancid_par_count: 5                         # Number of devices that can collect simultaneously.
 rancid_maildomain: ""
-rancid_htmlmails: "NO"                        # Colorized diffs in email. Requires ansi2html Python library to be installed.
+rancid_htmlmails: "NO"                      # Colorized diffs in email. Requires ansi2html Python library to be installed.
 rancid_mailheaders: "Precedence: bulk"      # How to mark messages sent by RANCID.
+rancid_configure_postfix: False             # Whether to configure postfix
 
 # Name and email for rancid user in git commits
 rancid_git_name: rancid
 rancid_git_email: rancid@acme.com
-
-# Whether or not to install rancid
-# This gets changed via set_fact
-install_rancid: False
 
 # Space delimited list of groups added to LIST_OF_GROUPS in /etc/rancid/rancid.conf
 rancid_list_of_groups: "{{ rancid_network_devices | map(attribute='group') | list | unique | join(' ') }}"

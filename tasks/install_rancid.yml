@@ -10,6 +10,7 @@
     - perl-LockFile-Simple
     - perl-MailTools
     - python-pip
+    - diffstat
   tags:
     - rancid
     - yum
