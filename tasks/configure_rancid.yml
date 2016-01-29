@@ -131,9 +131,9 @@
 - name: Configure router.db for groups
   template:
     src: router.db.j2
-    dest: "{{ rancid_home }}/{{ item.group }}/router.db"
+    dest: "{{ rancid_home }}/{{ item.key }}/router.db"
   become_user: rancid
-  with_items: rancid_network_devices
+  with_dict: rancid_network_devices
   tags:
     - rancid
     - routerdb

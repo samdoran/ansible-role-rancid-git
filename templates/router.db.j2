@@ -1,5 +1,3 @@
-{% for device in rancid_network_devices %}
-{% if item.group == device.group %}
+{% for device in item.value %}
 {{ device.name }}:{{ device.type }}:{{ device.state }}
-{% endif %}
 {% endfor %}
