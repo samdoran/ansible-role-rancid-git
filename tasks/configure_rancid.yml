@@ -64,7 +64,6 @@
 - name: Add /usr/libexec/rancid to PATH for rancid user
   lineinfile:
     state: present
-    backup: yes
     dest: "{{ rancid_home }}/.bash_profile"
     line: 'PATH=$PATH:/usr/libexec/rancid'
     insertbefore: 'export PATH'

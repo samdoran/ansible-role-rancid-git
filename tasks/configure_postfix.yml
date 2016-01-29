@@ -18,7 +18,6 @@
 - name: POSTFIX | Configure postfix
   lineinfile:
     state: present
-    backup: yes
     dest: /etc/postfix/main.cf
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
