@@ -1,27 +1,4 @@
 ---
-- name: Install dependencies for rancid-git
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - expect
-    - git
-    - perl-CGI
-    - perl-LockFile-Simple
-    - perl-MailTools
-    - python-pip
-    - diffstat
-  tags:
-    - rancid
-    - yum
-
-- name: Install Python packages
-  easy_install:
-    name: ansi2html
-  tags:
-    - rancid
-    - yum
-
 - name: Copy rancid-git rpm
   copy:
     src: rancid-git-{{ rancid_version }}.el6.x86_64.rpm
@@ -35,8 +12,18 @@
 
 - name: Install rancid-git
   yum:
-    name: /tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm
+    name: "{{ item }}"
     state: present
+  with_items:
+    - /tmp/rancid-git-{{ rancid_version }}.el6.x86_64.rpm
+    - python-pip
   tags:
     - rancid
     - updaterancid
+
+- name: Install Python packages
+  easy_install:
+    name: ansi2html
+  tags:
+    - rancid
+    - yum
