@@ -23,7 +23,7 @@ rancid_git_name: rancid
 rancid_git_email: rancid@acme.com
 
 # Space delimited list of groups added to LIST_OF_GROUPS in /etc/rancid/rancid.conf
-rancid_list_of_groups: "{{ rancid_network_devices | map(attribute='group') | list | unique | join(' ') }}"
+rancid_list_of_groups: "{% for item in rancid_network_devices | dictsort %}{{ item[0] }}{% if not loop.last %} {% endif %}{% endfor %}"
 
 # Cron job(s)
 # name, state, user, job, and minute are required
@@ -58,11 +58,17 @@ rancid_notify_groups:
 # Create one entry for each network device
 # See rancid documentation for valid types
 rancid_network_devices:
-  - name: c2911
-    type: cisco
-    ip: 192.168.5.1
-    state: up
-    group: routers
+  routers:
+    - name: c2911
+      type: cisco
+      ip: 192.168.5.1
+      state: up
+
+  switches:
+    - name: c2960
+      type: cisco
+      ip: 192.168.5.2
+      state: up
 
 # Repositories where changes are pushed
 # An empty repository must exist and the rancid user must have SSH access
