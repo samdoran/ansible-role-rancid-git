@@ -16,7 +16,7 @@ rancid_par_count: 5                         # Number of devices that can collect
 rancid_maildomain: ""
 rancid_htmlmails: "NO"                      # Colorized diffs in email. Requires ansi2html Python library to be installed.
 rancid_mailheaders: "Precedence: bulk"      # How to mark messages sent by RANCID.
-rancid_configure_postfix: False              # Whether to configure postfix
+rancid_configure_postfix: False             # Whether to configure postfix
 
 # Name and email for rancid user in git commits
 rancid_git_name: rancid

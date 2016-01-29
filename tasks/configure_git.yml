@@ -16,7 +16,9 @@
   register: current_git_remotes
   changed_when: false
   always_run: True
-  tags: rancid
+  tags:
+    - rancid
+    - rancid-remote
 
 - name: Add host keys to known_hosts
   known_hosts:
@@ -36,12 +38,16 @@
   become_user: rancid
   with_items: rancid_git_remotes
   when: "item.name not in current_git_remotes.stdout_lines"
-  tags: rancid
+  tags:
+    - rancid
+    - rancid-remote
 
 - name: Convert rancid_git_remotes.name into a list
   set_fact:
     git_remote_list: "{{ rancid_git_remotes | map(attribute = 'name') | list }}"
-  tags: rancid
+  tags:
+    - rancid
+    - rancid-remote
 
 - name: Remove git remotes
   command: >
@@ -50,7 +56,9 @@
   become_user: rancid
   with_items: current_git_remotes.stdout_lines
   when: "item not in git_remote_list"
-  tags: rancid
+  tags:
+    - rancid
+    - rancid-remote
 
 - name: Push to git remotes
   command: >
@@ -60,4 +68,6 @@
   changed_when: "item.url in push_status.stderr"
   become_user: rancid
   with_items: rancid_git_remotes
-  tags: rancid
+  tags:
+    - rancid
+    - rancid-remote
