@@ -1,5 +1,5 @@
 ---
-- name: Copy rancid-git rpm
+- name: INSTALL | Copy rancid-git rpm
   copy:
     src: rancid-git-{{ rancid_version }}.el6.x86_64.rpm
     dest: /tmp/
@@ -8,9 +8,9 @@
     mode: 0644
   tags:
     - rancid
-    - updaterancid
+    - rancid-update
 
-- name: Install rancid-git
+- name: INSTALL | Install rancid-git
   yum:
     name: "{{ item }}"
     state: present
@@ -19,11 +19,11 @@
     - python-pip
   tags:
     - rancid
-    - updaterancid
+    - rancid-update
 
-- name: Install Python packages
+- name: INSTALL | Install Python packages
   easy_install:
     name: ansi2html
   tags:
     - rancid
-    - yum
+    - rancid-yum

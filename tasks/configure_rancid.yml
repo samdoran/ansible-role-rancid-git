@@ -1,5 +1,5 @@
 ---
-- name: Copy hosts file
+- name: CONFIGURE | Copy hosts file
   template:
     src: hosts.j2
     dest: /etc/hosts
@@ -8,27 +8,32 @@
     mode: 0644
   tags:
     - rancid
-    - routerdb
-    - devices
+    - rancid-routerdb
+    - rancid-devices
 
-- name: Set permissions on {{ rancid_home }}
+- name: CONFIGURE | Set permissions on {{ rancid_home }}
   file:
     path: "{{ rancid_home }}"
     owner: root
     group: rancid
     mode: 0770
-  tags: rancid
+  tags:
+    - rancid
+    - rancid-user
 
-- name: Create .ssh folder for rancid user
+- name: CONFIGURE | Create .ssh folder for rancid user
   file:
     path: "{{ rancid_home }}/.ssh"
     state: directory
     owner: rancid
     group: rancid
     mode: 0700
-  tags: rancid
+  tags:
+    - rancid
+    - rancid-user
+    - rancid-ssh
 
-- name: Install SSH public key for rancid user
+- name: CONFIGURE | Install SSH public key for rancid user
   template:
     src: rancid_id_rsa.pub.j2
     dest: "{{ rancid_home }}/.ssh/id_rsa.pub"
@@ -36,9 +41,12 @@
     group: rancid
     mode: 0640
   when: rancid_ssh_public_key is defined
-  tags: rancid
+  tags:
+    - rancid
+    - rancid-user
+    - rancid-ssh
 
-- name: Install SSH private key for rancid user
+- name: CONFIGURE | Install SSH private key for rancid user
   template:
     src: rancid_id_rsa.j2
     dest: "{{ rancid_home }}/.ssh/id_rsa"
@@ -46,22 +54,31 @@
     group: rancid
     mode: 0400
   when: rancid_ssh_private_key is defined
-  tags: rancid
+  tags:
+    - rancid
+    - rancid-user
+    - rancid-ssh
 
-- name: Generate SSH key for rancid user if rancid_ssh_private_key is not defined
+- name: CONFIGURE | Generate SSH key for rancid user if rancid_ssh_private_key is not defined
   user:
     name: rancid
     generate_ssh_key: yes
   when: rancid_ssh_private_key is not defined
-  tags: rancid
+  tags:
+    - rancid
+    - rancid-user
+    - rancid-ssh
 
-- name: Set password for rancid user
+- name: CONFIGURE | Set password for rancid user
   user:
     name: rancid
     password: "{{ rancid_password_hash }}"
-  tags: rancid
+  tags:
+    - rancid
+    - rancid-user
+    - rancid-password
 
-- name: Add /usr/libexec/rancid to PATH for rancid user
+- name: CONFIGURE | Add /usr/libexec/rancid to PATH for rancid user
   lineinfile:
     state: present
     dest: "{{ rancid_home }}/.bash_profile"
@@ -69,9 +86,10 @@
     insertbefore: 'export PATH'
   tags:
     - rancid
-    - rancidprofile
+    - rancid-user
+    - rancid-profile
 
-- name: Copy rancid.conf
+- name: CONFIGURE | Copy rancid.conf
   template:
     src: rancid.conf.j2
     dest: /etc/rancid/rancid.conf
@@ -83,7 +101,7 @@
     - rancid
     - rancid-conf
 
-- name: Copy cloginrc
+- name: CONFIGURE | Copy cloginrc
   template:
     src: cloginrc.j2
     dest: "{{ rancid_home }}/.cloginrc"
@@ -92,10 +110,10 @@
     mode: 0640
   tags:
     - rancid
-    - cloginrc
-    - devices
+    - rancid-cloginrc
+    - rancid-devices
 
-- name: Configure notify groups
+- name: CONFIGURE | Configure notify groups
   lineinfile:
     state: present
     dest: /etc/aliases
@@ -106,7 +124,7 @@
     - rancid
     - rancid-postfix
 
-- name: Configure admin notify groups
+- name: CONFIGURE | Create admin notify groups in /etc/aliases
   lineinfile:
     state: present
     dest: /etc/aliases
@@ -117,7 +135,7 @@
     - rancid
     - rancid-postfix
 
-- name: run rancid-cvs
+- name: CONFIGURE | Run rancid-cvs
   command: /usr/libexec/rancid/rancid-cvs
   become_user: rancid
   register: rancidcvs_run
@@ -127,7 +145,7 @@
     - rancid-conf
     - rancid-cvs
 
-- name: Configure router.db for groups
+- name: CONFIGURE | Create router.db files for each group
   template:
     src: router.db.j2
     dest: "{{ rancid_home }}/{{ item.key }}/router.db"
@@ -135,10 +153,10 @@
   with_dict: rancid_network_devices
   tags:
     - rancid
-    - routerdb
-    - devices
+    - rancid-routerdb
+    - rancid-devices
 
-- name: Install rancid cron jobs
+- name: CONFIGURE | Install cron jobs that run RANCID
   cron:
     name: "{{ item.name }}"
     state: "{{ item.state }}"
@@ -152,5 +170,4 @@
   with_items: rancid_cron
   tags:
     - rancid
-    - rancidcron
-
+    - rancid-cron

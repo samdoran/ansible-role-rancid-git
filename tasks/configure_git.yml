@@ -1,5 +1,5 @@
 ---
-- name: Copy gitconfig
+- name: GIT | Copy gitconfig
   template:
     src: gitconfig.j2
     dest: "{{ rancid_home }}/.gitconfig"
@@ -8,7 +8,7 @@
     mode: 0640
   tags: rancid
 
-- name: List current git remotes
+- name: GIT | List current git remotes
   command: >
     git remote
     chdir={{ rancid_home }}
@@ -20,7 +20,7 @@
     - rancid
     - rancid-remote
 
-- name: Add host keys to known_hosts
+- name: GIT | Add host keys to known_hosts
   known_hosts:
     name: "{{ item.hostname }}"
     state: present
@@ -29,9 +29,9 @@
   with_items: rancid_git_remotes
   tags:
     - rancid
-    - known_hosts
+    - rancid-knownhosts
 
-- name: Add git remotes
+- name: GIT | Add git remotes
   command: >
     git remote add {{ item.name }} {{ item.url }}
     chdir={{ rancid_home }}
@@ -42,14 +42,14 @@
     - rancid
     - rancid-remote
 
-- name: Convert rancid_git_remotes.name into a list
+- name: GIT | Convert rancid_git_remotes.name into a list
   set_fact:
     git_remote_list: "{{ rancid_git_remotes | map(attribute = 'name') | list }}"
   tags:
     - rancid
     - rancid-remote
 
-- name: Remove git remotes
+- name: GIT | Remove git remotes
   command: >
     git remote rm {{ item }}
     chdir={{ rancid_home }}
@@ -60,7 +60,7 @@
     - rancid
     - rancid-remote
 
-- name: Push to git remotes
+- name: GIT | Push to git remotes
   command: >
     git push {{ item.name }} master
     chdir={{ rancid_home }}
