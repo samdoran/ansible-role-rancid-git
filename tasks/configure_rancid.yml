@@ -10,6 +10,7 @@
     - rancid
     - rancid-routerdb
     - rancid-devices
+    - rancid-hosts
 
 - name: CONFIGURE | Set permissions on {{ rancid_home }}
   file:

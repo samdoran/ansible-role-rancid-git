@@ -27,6 +27,7 @@
     key: "{{ item.host_key }}"
   become_user: rancid
   with_items: rancid_git_remotes
+  when: rancid_git_remotes is defined
   tags:
     - rancid
     - rancid-knownhosts
@@ -37,14 +38,14 @@
     chdir={{ rancid_home }}
   become_user: rancid
   with_items: rancid_git_remotes
-  when: "item.name not in current_git_remotes.stdout_lines"
+  when: rancid_git_remotes is defined and current_git_remotes is defined and item.name not in current_git_remotes.stdout_lines
   tags:
     - rancid
     - rancid-remote
 
 - name: GIT | Convert rancid_git_remotes.name into a list
   set_fact:
-    git_remote_list: "{{ rancid_git_remotes | map(attribute = 'name') | list }}"
+    git_remote_list: "{{ rancid_git_remotes | default('') | map(attribute = 'name') | list }}"
   tags:
     - rancid
     - rancid-remote
@@ -55,7 +56,7 @@
     chdir={{ rancid_home }}
   become_user: rancid
   with_items: current_git_remotes.stdout_lines
-  when: "item not in git_remote_list"
+  when: item not in git_remote_list
   tags:
     - rancid
     - rancid-remote
@@ -68,6 +69,7 @@
   changed_when: "item.url in push_status.stderr"
   become_user: rancid
   with_items: rancid_git_remotes
+  when: rancid_git_remotes is defined
   tags:
     - rancid
     - rancid-remote

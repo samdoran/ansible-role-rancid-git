@@ -35,11 +35,11 @@ Role Variables
 | `rancid_git_email` | `rancid@acme.com` | Email used for git commits. |
 | `install_rancid` | `False` | Whether or not to install rancid. This gets changed via set_fact when `rancid_version` does not match the installed version. |
 | `rancid_list_of_groups` | `firewalls routers switches` | Space delimited list of groups added to `LIST_OF_GROUPS` in `/etc/rancid/rancid.conf`. This is autmatically generated from `rancid_network_devices` |
-| `rancid_notify_groups` | (see `defaults.yml`) | For each group in LIST_OF_GROUPS, who gets emailed the diffs. Added to `/etc/aliases`. |
-| `rancid_network_devices` | (see `defaults.yml`) | Create one `key` per device group, and one entry per network device witch `name`, `type`, `ip`, and `state`. Refer to RANCID documentation for appropriate values for `type`. |
-| `rancid_git_remotes` | (see `defaults.yml`) | Repository/repositories where changes are pushed |
-| `rancid_ssh_private_key` | (see `defaults.yml`) | Multiline variable containing the SSH private key used by the `rancid` account. If this variable is not defined, a key will be created. **This should be stored in an Ansible vault.** |
-| `rancid_ssh_public_key` | (see `defaults.yml`) | SSH pubilc key used by the `rancid` user. If `rancid_ssh_private_key` is not defined, a key will be generated. |
+| `rancid_notify_groups` | (see `defaults/main.yml`) | For each group in LIST_OF_GROUPS, who gets emailed the diffs. Added to `/etc/aliases`. |
+| `rancid_network_devices` | (see `defaults/main.yml`) | Create one `key` per device group, and one entry per network device witch `name`, `type`, `ip`, and `state`. Refer to RANCID documentation for appropriate values for `type`. |
+| `rancid_git_remotes` | `[undefined]` | Repository/repositories where changes are pushed. See `defaults/main.yml` for details. |
+| `rancid_ssh_private_key` | (see `defaults/main.yml`) | Multiline variable containing the SSH private key used by the `rancid` account. If this variable is not defined, a key will be created. **This should be stored in an Ansible vault.** |
+| `rancid_ssh_public_key` | (see `defaults/main.yml`) | SSH pubilc key used by the `rancid` user. If `rancid_ssh_private_key` is not defined, a key will be generated. |
 | `rancid_configure_postfix` | `False` | Whether to configure postfix. Only use if email notifications are desired and email _is not_ configured with another role. |
 | `rancid_relayhost` | `[undefined]` | IP or FQDN of the email relay host. |
 
