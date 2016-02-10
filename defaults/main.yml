@@ -45,15 +45,15 @@ rancid_cron:
 
 # For each group in LIST_OF_GROUPS, who gets emailed the diffs.
 # Added to /etc/aliases
-rancid_notify_groups:
-  - group: firewalls
-    notify: bob@acme.com
+# rancid_notify_groups:
+#   - group: firewalls
+#     notify: bob@acme.com
 
-  - group: routers
-    notify: bob@acme.com
+#   - group: routers
+#     notify: bob@acme.com
 
-  - group: switches
-    notify: bob@acme.com
+#   - group: switches
+#     notify: bob@acme.com
 
 # Create one entry for each network device
 # See rancid documentation for valid types

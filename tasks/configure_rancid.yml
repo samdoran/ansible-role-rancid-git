@@ -118,23 +118,41 @@
   lineinfile:
     state: present
     dest: /etc/aliases
+    regexp: "^rancid-{{ item.group }}"
     line: "rancid-{{ item.group }}:     {{ item.notify }}"
   with_items: rancid_notify_groups
+  when: rancid_notify_groups is defined
   notify: rehash aliases
   tags:
     - rancid
     - rancid-postfix
+    - rancid-aliases
 
 - name: CONFIGURE | Create admin notify groups in /etc/aliases
   lineinfile:
     state: present
     dest: /etc/aliases
+    regexp: "^rancid-admin-{{ item.group }}"
     line: "rancid-admin-{{ item.group }}:     {{ item.admin_notify }}"
   with_items: rancid_notify_groups
+  when: rancid_notify_groups is defined
   notify: rehash aliases
   tags:
     - rancid
     - rancid-postfix
+    - rancid-aliases
+
+- name: CONFIGURE | Remove notify groups when not defined
+  lineinfile:
+    state: absent
+    regexp: "^rancid-"
+    dest: /etc/aliases
+  when: rancid_notify_groups is not defined
+  notify: rehash aliases
+  tags:
+    - rancid
+    - rancid-postfix
+    - rancid-aliases
 
 - name: CONFIGURE | Run rancid-cvs
   command: /usr/libexec/rancid/rancid-cvs
