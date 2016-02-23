@@ -37,6 +37,7 @@ Role Variables
 | `rancid_list_of_groups` | `firewalls routers switches` | Space delimited list of groups added to `LIST_OF_GROUPS` in `/etc/rancid/rancid.conf`. This is autmatically generated from `rancid_network_devices` |
 | `rancid_notify_groups` | (see `defaults/main.yml`) | For each group in LIST_OF_GROUPS, who gets emailed the diffs. Added to `/etc/aliases`. |
 | `rancid_network_devices` | (see `defaults/main.yml`) | Create one `key` per device group, and one entry per network device witch `name`, `type`, `ip`, and `state`. Refer to RANCID documentation for appropriate values for `type`. |
+| `rancid_clogin` | (see `defaults/main.yml`) | Create entries in the `.cloginrc` file. |
 | `rancid_git_remotes` | `[undefined]` | Repository/repositories where changes are pushed. See `defaults/main.yml` for details. |
 | `rancid_ssh_private_key` | (see `defaults/main.yml`) | Multiline variable containing the SSH private key used by the `rancid` account. If this variable is not defined, a key will be created. **This should be stored in an Ansible vault.** |
 | `rancid_ssh_public_key` | (see `defaults/main.yml`) | SSH pubilc key used by the `rancid` user. If `rancid_ssh_private_key` is not defined, a key will be generated. |

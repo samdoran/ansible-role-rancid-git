@@ -45,30 +45,60 @@ rancid_cron:
 
 # For each group in LIST_OF_GROUPS, who gets emailed the diffs.
 # Added to /etc/aliases
+#
 # rancid_notify_groups:
 #   - group: firewalls
 #     notify: bob@acme.com
+#     admin_notify: bob@acme.com
 
 #   - group: routers
 #     notify: bob@acme.com
+#     admin_notify: bob@acme.com
 
 #   - group: switches
 #     notify: bob@acme.com
+#     admin_notify: bob@acme.com
 
 # Create one entry for each network device
 # See rancid documentation for valid types
-rancid_network_devices:
-  routers:
-    - name: c2911
-      type: cisco
-      ip: 192.168.5.1
-      state: up
+#
+# rancid_network_devices:
+#   routers:
+#     - name: c2911
+#       type: cisco
+#       ip: 192.168.5.1
+#       state: up
 
-  switches:
-    - name: c2960
-      type: cisco
-      ip: 192.168.5.2
-      state: up
+#   switches:
+#     - name: c2960
+#       type: cisco
+#       ip: 192.168.5.2
+#       state: up
+
+# Create one entry in the .cloginrc for each list item
+# Check man cloginrc for details on available directives
+#
+# rancid_clogin:
+#   - directive: method
+#     glob: "*"
+#     values:
+#       - ssh
+
+#   - directive: method
+#     glob: "*"
+#     values:
+#       - aes256-cbc
+
+#   - directive: autoenable
+#     glob: "c*"
+#     values:
+#       - "1"
+
+#   - directive: password
+#     glob: "*"
+#     values:
+#       - "{{ vault_rancid_password }}"
+#       - "{{ vault_rancid_enable_password }}"
 
 # Repositories where changes are pushed
 # An empty repository must exist and the rancid user must have SSH access
