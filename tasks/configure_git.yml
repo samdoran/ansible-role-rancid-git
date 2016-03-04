@@ -26,7 +26,7 @@
     state: present
     key: "{{ item.host_key }}"
   become_user: rancid
-  with_items: rancid_git_remotes
+  with_items: "{{ rancid_git_remotes }}"
   when: rancid_git_remotes is defined
   tags:
     - rancid
@@ -37,7 +37,7 @@
     git remote add {{ item.name }} {{ item.url }}
     chdir={{ rancid_home }}
   become_user: rancid
-  with_items: rancid_git_remotes
+  with_items: "{{ rancid_git_remotes }}"
   when: rancid_git_remotes is defined and current_git_remotes is defined and item.name not in current_git_remotes.stdout_lines
   tags:
     - rancid
@@ -55,7 +55,7 @@
     git remote rm {{ item }}
     chdir={{ rancid_home }}
   become_user: rancid
-  with_items: current_git_remotes.stdout_lines
+  with_items: "{{ current_git_remotes.stdout_lines }}"
   when: item not in git_remote_list
   tags:
     - rancid
@@ -68,7 +68,7 @@
   register: push_status
   changed_when: "item.url in push_status.stderr"
   become_user: rancid
-  with_items: rancid_git_remotes
+  with_items: "{{ rancid_git_remotes }}"
   when: rancid_git_remotes is defined
   tags:
     - rancid

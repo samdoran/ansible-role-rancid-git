@@ -120,7 +120,7 @@
     dest: /etc/aliases
     regexp: "^rancid-{{ item.group }}"
     line: "rancid-{{ item.group }}:     {{ item.notify }}"
-  with_items: rancid_notify_groups
+  with_items: "{{ rancid_notify_groups }}"
   when: rancid_notify_groups is defined
   notify: rehash aliases
   tags:
@@ -134,7 +134,7 @@
     dest: /etc/aliases
     regexp: "^rancid-admin-{{ item.group }}"
     line: "rancid-admin-{{ item.group }}:     {{ item.admin_notify }}"
-  with_items: rancid_notify_groups
+  with_items: "{{ rancid_notify_groups }}"
   when: rancid_notify_groups is defined
   notify: rehash aliases
   tags:
@@ -169,7 +169,7 @@
     src: router.db.j2
     dest: "{{ rancid_home }}/{{ item.key }}/router.db"
   become_user: rancid
-  with_dict: rancid_network_devices
+  with_dict: "{{ rancid_network_devices }}"
   tags:
     - rancid
     - rancid-routerdb
@@ -186,7 +186,7 @@
     hour: "{{ item.hour | default('*') }}"
     minute: "{{ item.minute }}"
     job: "{{ item.job }}"
-  with_items: rancid_cron
+  with_items: "{{ rancid_cron }}"
   tags:
     - rancid
     - rancid-cron
