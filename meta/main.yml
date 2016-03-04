@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Sam Doran
-  description: "RANCID 2 for with Git support and lots of custom devices support such as Vyatta and BNT."
+  description: "RANCID 2 fork with Git support. Also includes customizations for snapshotting many more devices than the main project, such as Vyatta, F5, Dell, and Ubiquiti EdgeSwitch to name a few."
   company:
   license: MIT
   min_ansible_version: 1.9
@@ -11,8 +11,21 @@ galaxy_info:
     versions:
       - 6
 
-  categories:
+  galaxy_tags:
     - git
     - network
+    - rancid
+    - vyatta
+    - cisco
+    - nexus
+    - arista
+    - fortigate
+    - juniper
+    - junos
+    - pfsense
+    - brocade
+    - f5
+    - ubiquiti
+    - dell
 
 dependencies: []
