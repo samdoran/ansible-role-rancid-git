@@ -1,17 +1,60 @@
 RANCID Git
 ======
+[![Galaxy](https://img.shields.io/badge/galaxy-samdoran.rancid--git-blue.svg?style=flat)](https://galaxy.ansible.com/samdoran/rancid-git)
 
-This installs [`rancid-git`](https://github.com/dotwaffle/rancid-git), a fork of RANCID 2 that supports using Git.
+This role installs [`rancid-git`](https://github.com/dotwaffle/rancid-git), a fork of RANCID 2 that supports using Git.
 
 Requirements
 ------------
 
-SSH pubilc key installed on remote git repository/repositories.
-Commit access to all git remotes
-SSH access to all network devices via `rancid` user account and password
+SSH access to all network devices via the `rancid` user account and password is required. Make sure the target device permits the `rancid` host in any ACLs that protect the management plane.
+
+If you wish you have `rancid` push to any remote repositories, you also need the SSH public key installed on any remote git repository/repositories as well as commit access to all git remotes.
 
 Role Variables
 --------------
+
+This role will not work "out of the box" &mdash; you will need to define `rancid_network_devices` and `rancid_clogin` at a minimum. If you wish to have `rancid` push to remotes or send emails, you should also define `rancid_git_remotes` as well as `rancid_notify_groups`.
+
+Defining values in `rancid_clogin` can be rather tricky if you use different usernames and/or passwords for your devices (which isn't a bad idea). One way to solve this is to create a dictionary that stores the passwords (which should be an [Ansible Vault](http://docs.ansible.com/ansible/playbooks_vault.html)):
+
+```yaml
+# This file is encrypted with ansible-vault
+vault_rancid_passwords:
+  core-router-01:
+    password: "all-your-device-are-belong-to-us"
+    enable: "i-am-not-an-enabler"
+
+  core-switch-01:
+    password: "BigGnarlyPassword"
+    enable: "enable-babel-fo-fabel"
+
+    ...
+```
+
+And reference those in `rancid_clogin`:
+
+```yaml
+# This is a host_var, or vars/main.yaml, etc.
+rancid_clogin:
+  - directive: user
+    glob: "*"
+    values:
+      - rancid
+
+  - directive: password
+    glob: "core-router-01"
+    values:
+      - "{{ vault_rancid_passwords['core-router-01']['password'] }}"
+      - "{{ vault_rancid_passwords['core-router-01']['enable'] }}"
+
+  - directive: password
+    glob: "core-switch-01"
+    values:
+      - "{{ vault_rancid_passwords['core-switch-01']['password'] }}"
+      - "{{ vault_rancid_passwords['core-switch-01']['enable'] }}"
+```
+
 
 | Name              | Default Value       | Description          |
 |-------------------|---------------------|----------------------|
@@ -57,7 +100,7 @@ Example Playbook
       sudo: yes
 
       vars:
-          rancid_ssh_public_key: 'ssh-rsa foo== rancid'
+          rancid_ssh_public_key: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDhv9b... rancid'
           rancid_git_name: Rancid
           rancid_git_email: rancid@acme.com
 

@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+
+{% set lastglob = "" %}
+{% for item in rancid_clogin %}
+{% if lastglob != item.glob %}
+
+{% set lastglob = item.glob %}
+{% endif %}
+add {{ item.directive }} {{ item.glob }} {% for value in item['values'] %}{% raw %}{{% endraw %}{{ value }}{% raw %}}{% endraw %}{% if not loop.last %} {% endif %}{% endfor %}
+
+{% endfor %}
