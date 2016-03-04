@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Sam Doran
-  description:
+  description: "RANCID 2 for with Git support and lots of custom devices support such as Vyatta and BNT."
   company:
   license: MIT
   min_ansible_version: 1.9
@@ -14,3 +14,5 @@ galaxy_info:
   categories:
     - git
     - network
+
+dependencies: []
